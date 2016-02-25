@@ -88,6 +88,9 @@ class DiffFinder
         if (!$this->targetLocations->isEmpty()) {
             $validTargetLocations = true;
             foreach ($this->targetLocations->toArray() as $location) {
+                /**
+                 * @var Location $location
+                 */
              
                 /**
                  * @var bool $validTargetLocations
