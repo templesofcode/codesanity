@@ -151,6 +151,11 @@ class Location
             ));
         }
 
+        $pipedCommands = new ArrayCollection();
+        
+        $findCommand = new FindCommand();
+
+
         $pipedCommands = [
             'find . ! -type d ! type l -print',
             'sed -e "s/['.$this->getFileEscapeChars().']/\\\\\\&/g"',
