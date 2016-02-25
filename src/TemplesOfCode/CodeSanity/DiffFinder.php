@@ -47,7 +47,7 @@ class DiffFinder
      * @param Location $targetLocation
      * @return $this
      */
-    public function remoteTargetLocation(Location $targetLocation)
+    public function removeTargetLocation(Location $targetLocation)
     {
         if ($this->targetLocations->contains($targetLocation)) {
             $this->targetLocations->removeElement($targetLocation);
@@ -74,12 +74,45 @@ class DiffFinder
         return $this;
     }
     
+    private function validateResources()
+    {
+        /**
+         * @var bool $validSourceOfTruth
+         */
+        $validSourceOfTruth = $this->sourceOfTruth->isValid();
+        
+        /**
+         * @var bool $validTargetLocations
+         */
+        $validTargetLocation = false;
+        if (!$this->targetLocations->isEmpty()) {
+            $validTargetLocations = true;
+            foreach ($this->targetLocations->toArray() as $location) {
+             
+                /**
+                 * @var bool $validTargetLocations
+                 */
+                $validTargetLocations &= $location->isValid();
+                if (!$validTargetLocations) {
+                    break;
+                }
+            }
+        }
+        
+        /**
+         * @var bool $verdict
+         */
+        $verdict = $validSourceOfTruth && $validTargetLocations
+        
+        return $verdict;
+    }
+    
     /**
      * @return bool|null
      */
     public function find()
     {
-        $resourcesValidated = $this->validateReosources();
+        $resourcesValidated = $this->validateResources();
         if (!$resourcesValidated) {
             throw new Exception("Resources needed to find differences not complete");
             return 1;
