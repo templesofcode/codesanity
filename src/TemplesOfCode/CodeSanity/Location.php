@@ -136,6 +136,21 @@ class Location
 
     /**
      * @return bool
+     */
+    public function isValid()
+    {
+        /**
+         * @var bool $verdict
+         */
+        $verdict = !is_empty($this->directory) 
+            && !is_readable($this->directory)
+        ;
+        
+        return $verdict;
+    }
+
+    /**
+     * @return bool
      * @throws ShellExecutionException
      */
     public function populateRoster()
@@ -144,9 +159,9 @@ class Location
          * todo: explore the OOP approach by iterating through the dir tree with RecursiveDirectoryIterator.
          */
 
-        if (!is_readable($this->directory)) {
+        if (!$this->isValid()) {
             throw new \InvalidArgumentException(sprintf(
-                "Could not read the directory '%s' while attempting to populate location roster",
+                "Location validation failed for Location with directory '%s'",
                 $this->directory
             ));
         }
