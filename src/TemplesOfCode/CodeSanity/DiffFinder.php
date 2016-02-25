@@ -73,4 +73,17 @@ class DiffFinder
         $this->sourceOfTruth = $sourceOfTruth;
         return $this;
     }
+    
+    /**
+     * @return bool|null
+     */
+    public function find()
+    {
+        $resourcesValidated = $this->validateReosources();
+        if (!$resourcesValidated) {
+            throw new Exception("Resources needed to find differences not complete");
+            return 1;
+        }
+    
+    }
 }
