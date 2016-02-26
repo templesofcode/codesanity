@@ -4,6 +4,12 @@ namespace TemplesOfCode\CodeSanity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use TemplesOfCode\CodeSanity\Exception\ShellExecutionException;
+use TemplesOfCode\CodeSanity\Command\FindCommand;
+use TemplesOfCode\CodeSanity\Command\SedCommand;
+use TemplesOfCode\CodeSanity\Command\SortCommand;
+use TemplesOfCode\CodeSanity\Command\Sha1SumCommand;
+use TemplesOfCode\CodeSanity\Command\XargsCommand;
+use TemplesOfCode\CodeSanity\Command\CdCommand;
 
 /**
  * Class Location
@@ -136,6 +142,21 @@ class Location
 
     /**
      * @return bool
+     */
+    public function isValid()
+    {
+        /**
+         * @var bool $verdict
+         */
+        $verdict = !empty($this->directory)
+            && !is_readable($this->directory)
+        ;
+
+        return $verdict;
+    }
+
+    /**
+     * @return bool
      * @throws ShellExecutionException
      */
     public function populateRoster()
@@ -144,72 +165,87 @@ class Location
          * todo: explore the OOP approach by iterating through the dir tree with RecursiveDirectoryIterator.
          */
 
-        if (!is_readable($this->directory)) {
+        if (!$this->isValid()) {
             throw new \InvalidArgumentException(sprintf(
-                "Could not read the directory '%s' while attempting to populate location roster",
+                "Location validation failed for Location with directory '%s'",
                 $this->directory
             ));
         }
 
-        $pipedCommands = [
-            'find . ! -type d ! type l -print',
-            'sed -e "s/['.$this->getFileEscapeChars().']/\\\\\\&/g"',
-            'sort',
-            'xargs -n1 sha1sum >>'.$this->getHashesRosterFileName()
-        ];
-
-        $script = [
-            "cd ".$this->getDirectory(),
-            implode(' | ', $pipedCommands)
-        ];
-
-        $script = implode('; ', $script);
-
+        /**
+         * @var CommandChain $pipeChainedCommands
+         */
+        $pipeChainedCommands = $this->buildPipeChainedCommands();
 
         /**
-         * todo: include
+         * @var CommandChain $sequenceChainedCommands
          */
+        $sequenceChainedCommands = $this->buildSequenceChainedCommands();
+        $sequenceChainedCommands->addCommand($pipeChainedCommands);
+
         list(
             $status,
             $output
-        ) = $this->executeScript($script);
+        ) = $sequenceChainedCommands->execute(true);
 
         if ($status) {
             $shellException = new ShellExecutionException(sprintf(
                 "Failed to execute the shell script successfully:\n\t%s",
-                $script
+                $sequenceChainedCommands->getCommand()
             ));
 
             $shellException->setOutput($output);
 
             throw $shellException;
         }
-        
+
         return true;
     }
 
     /**
-     * @param string $script
-     * @return int
+     * @return CommandChain
      */
-    private function executeScript($script)
+    private function buildPipeChainedCommands()
     {
-        /**
-         * Scope in placeholder variables for execution.
-         */
+        $pipeChainedCommands = new CommandChain(' | ');
 
-        /**
-         * @var [] $output
-         */
-        $output = [];
+        $findCommand = new FindCommand();
+        $findCommand->addParameter('.');
+        $findCommand->addParameter('! -type d');
+        $findCommand->addParameter('! -type l');
+        $findCommand->addParameter('-print');
+        $pipeChainedCommands->addCommand($findCommand);
 
-        /**
-         * @var int $returnStatus
-         */
-        $returnStatus = null;
+        $sedCommand = new SedCommand();
+        $sedCommand->addArgument('e', '"s/['.$this->getFileEscapeChars().']/\\\\\\&/g"');
+        $pipeChainedCommands->addCommand($sedCommand);
 
-        exec($script, $output, $returnStatus);
+        $sortCommand = new SortCommand();
+        $pipeChainedCommands->addCommand($sortCommand);
 
-        return [$returnStatus, $output];
+        $sha1sumCommand = new Sha1SumCommand();
+        $pipeChainedCommands->addCommand($sha1sumCommand);
+
+        $xargsCommand = new XargsCommand();
+        $xargsCommand->addArgument('n', 1);
+        $xargsCommand->addParameter($sha1sumCommand->getCommand());
+        $xargsCommand->addParameter('>> '.$this->hashesRosterFileName);
+        $pipeChainedCommands->addCommand($xargsCommand);
+
+        return $pipeChainedCommands;
+    }
+
+    /**
+     * @return CommandChain
+     */
+    private function buildSequenceChainedCommands()
+    {
+        $sequenceChainedCommands = new CommandChain(';');
+
+        $cdCommand = new CdCommand();
+        $cdCommand->addParameter($this->getDirectory());
+        $sequenceChainedCommands->addCommand($cdCommand);
+
+        return $sequenceChainedCommands;
     }
 }

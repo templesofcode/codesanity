@@ -4,6 +4,10 @@ namespace TemplesOfCode\CodeSanity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * Class DiffFinder
+ * @package TemplesOfCode\CodeSanity
+ */
 class DiffFinder
 {
     /**
@@ -17,6 +21,9 @@ class DiffFinder
     protected $targetLocations;
 
 
+    /**
+     * DiffFinder constructor.
+     */
     public function __construct()
     {
         $this->targetLocations = new ArrayCollection();
