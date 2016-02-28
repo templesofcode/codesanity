@@ -80,41 +80,43 @@ class DiffFinder
         $this->sourceOfTruth = $sourceOfTruth;
         return $this;
     }
-    
+
+    /**
+     * @return bool
+     */
     private function validateResources()
     {
         /**
          * @var bool $validSourceOfTruth
          */
         $validSourceOfTruth = $this->sourceOfTruth->isValid();
-        
+        if (!$validSourceOfTruth) {
+            return false;
+        }
+
+        if ($this->targetLocations->isEmpty()) {
+            return false;
+        }
+
         /**
          * @var bool $validTargetLocations
          */
-        $validTargetLocation = false;
-        if (!$this->targetLocations->isEmpty()) {
-            $validTargetLocations = true;
-            foreach ($this->targetLocations->toArray() as $location) {
-                /**
-                 * @var Location $location
-                 */
-             
-                /**
-                 * @var bool $validTargetLocations
-                 */
-                $validTargetLocations &= $location->isValid();
-                if (!$validTargetLocations) {
-                    break;
-                }
+        $validTargetLocations = true;
+        foreach ($this->targetLocations->toArray() as $location) {
+            /**
+             * @var Location $location
+             */
+
+            /**
+             * @var bool $validTargetLocations
+             */
+            $validTargetLocations &= $location->isValid();
+            if (!$validTargetLocations) {
+                break;
             }
         }
-        
-        /**
-         * @var bool $verdict
-         */
-        $verdict = $validSourceOfTruth && $validTargetLocations
-        
-        return $verdict;
+
+        return $validTargetLocations;
     }
 
     /**
@@ -123,10 +125,25 @@ class DiffFinder
      */
     public function find()
     {
+        /**
+         * @var bool $resourcesValidated
+         */
         $resourcesValidated = $this->validateResources();
         if (!$resourcesValidated) {
             throw new \Exception("Resources needed to find differences not complete");
         }
-    
+
+        /**
+         * @var bool $success
+         */
+        $success = $this->sourceOfTruth->populateRoster();
+        if (!$success) {
+            throw new \Exception(sprintf(
+                "An error occurred when trying to populate roster for location with directory '%s'",
+                $this->sourceOfTruth->getDirectory()
+            ));
+        }
+        
+        
     }
 }

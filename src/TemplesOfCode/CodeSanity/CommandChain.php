@@ -140,13 +140,13 @@ class CommandChain implements ChainableCommand
         $output = [];
 
         /**
-         * @var int $returnStatus
+         * @var int $exitStatus
          */
-        $returnStatus = null;
+        $exitStatus = null;
 
-        exec($script, $output, $returnStatus);
+        exec($script, $output, $exitStatus);
 
-        $returnedResources = [$returnStatus];
+        $returnedResources = [$exitStatus];
         if ($showOutput) {
             $returnedResources[] = $output;
         }
