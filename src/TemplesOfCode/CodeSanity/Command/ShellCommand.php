@@ -35,4 +35,37 @@ class ShellCommand extends BaseCommand implements ChainableCommand
         }
         return $executable;
     }
+
+    /**
+     * @param bool $showOutput
+     * @return array
+     */
+    public function execute($showOutput = false)
+    {
+        $script = $this->getCommand();
+
+        /**
+         * Scope in placeholder variables for execution.
+         */
+
+        /**
+         * @var [] $output
+         */
+        $output = [];
+
+        /**
+         * @var int $exitStatus
+         */
+        $exitStatus = null;
+
+        exec($script, $output, $exitStatus);
+
+        $returnedResources = [$exitStatus];
+        if ($showOutput) {
+            $returnedResources[] = $output;
+        }
+
+        return $returnedResources;
+    }
+
 }

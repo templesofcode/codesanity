@@ -77,12 +77,9 @@ class RemoteConnection extends SSH
         $sshCommand->addOption('q');
         $sshCommand->addParameter('exit');
 
-        $sequencedCommandChain = new CommandChain(';');
-        $sequencedCommandChain->addCommand($sshCommand);
-
         list(
             $exitStatus
-        ) = $sequencedCommandChain->execute(false);
+        ) = $sshCommand->execute(false);
 
         if ($exitStatus) {
             return false;

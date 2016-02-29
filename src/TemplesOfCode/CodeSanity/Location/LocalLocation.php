@@ -2,6 +2,7 @@
 
 namespace TemplesOfCode\CodeSanity\Location;
 
+use TemplesOfCode\CodeSanity\DiffItem;
 use TemplesOfCode\CodeSanity\Exception\ShellExecutionException;
 use TemplesOfCode\CodeSanity\Command\FindCommand;
 use TemplesOfCode\CodeSanity\Command\SedCommand;
@@ -36,7 +37,7 @@ class LocalLocation extends Location
     /**
      * {@inheritdoc}
      */
-    public function populateRoster()
+    public function buildRoster()
     {
         /**
          * todo: explore the OOP approach by iterating through the dir tree with RecursiveDirectoryIterator.
@@ -44,7 +45,7 @@ class LocalLocation extends Location
 
         if (!$this->isValid()) {
             throw new \InvalidArgumentException(sprintf(
-                "Location validation failed for Location with directory '%s'",
+                "Local location validation failed for Location with directory '%s'",
                 $this->directory
             ));
         }
@@ -76,7 +77,16 @@ class LocalLocation extends Location
             throw $shellException;
         }
 
-        return true;
+        foreach ($output as $line) {
+            $hashAndFile = preg_split('/\s+/', $line);
+
+            $item = new DiffItem();
+            $item->setHash($hashAndFile[0]);
+            $item->setRelativeFileName($hashAndFile[1]);
+            $this->roster->add($item);
+        }
+
+        return $this->roster;
     }
 
     /**
@@ -84,7 +94,12 @@ class LocalLocation extends Location
      */
     private function buildPipeChainedCommands()
     {
-        $pipeChainedCommands = new CommandChain(' | ');
+        /**
+         * @var string $chainLink
+         */
+        $chainLink = ' | ';
+
+        $pipeChainedCommands = new CommandChain($chainLink);
 
         $findCommand = new FindCommand();
         $findCommand->addParameter('.');
@@ -94,7 +109,7 @@ class LocalLocation extends Location
         $pipeChainedCommands->addCommand($findCommand);
 
         $sedCommand = new SedCommand();
-        $sedCommand->addArgument('e', '"s/['.$this->getFileEscapeChars().']/\\\\\\&/g"');
+        $sedCommand->addArgument('e', '"s/[[:alnum:]]/\\\\\\&/g"');
         $pipeChainedCommands->addCommand($sedCommand);
 
         $sortCommand = new SortCommand();
@@ -106,7 +121,7 @@ class LocalLocation extends Location
         $xargsCommand = new XargsCommand();
         $xargsCommand->addArgument('n', 1);
         $xargsCommand->addParameter($sha1sumCommand->getCommand());
-        $xargsCommand->addParameter('>> '.$this->hashesRosterFileName);
+        //$xargsCommand->addParameter('>> '.$this->hashesRosterFileName);
         $pipeChainedCommands->addCommand($xargsCommand);
 
         return $pipeChainedCommands;
