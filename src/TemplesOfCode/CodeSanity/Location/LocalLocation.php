@@ -83,7 +83,7 @@ class LocalLocation extends Location
             $item = new DiffItem();
             $item->setHash($hashAndFile[0]);
             $item->setRelativeFileName($hashAndFile[1]);
-            $this->roster->add($item);
+            $this->roster->set($hashAndFile[1], $item);
         }
 
         return $this->roster;

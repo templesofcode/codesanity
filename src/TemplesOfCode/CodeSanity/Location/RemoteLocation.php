@@ -92,7 +92,7 @@ class RemoteLocation extends Location
 
         list(
             $exitStatus
-            ) = $sequencedCommandChain->execute(false);
+        ) = $sequencedCommandChain->execute(false);
 
         if ($exitStatus) {
             return false;
@@ -150,7 +150,6 @@ class RemoteLocation extends Location
         }
 
         return $this->roster;
-
     }
 
     public function buildRemoteCommandChain()

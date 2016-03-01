@@ -134,16 +134,70 @@ class DiffFinder
         }
 
         /**
-         * @var bool $success
+         * @var ArrayCollection<DiffItem> $sotRoster
          */
-        $success = $this->sourceOfTruth->populateRoster();
-        if (!$success) {
-            throw new \Exception(sprintf(
-                "An error occurred when trying to populate roster for location with directory '%s'",
-                $this->sourceOfTruth->getDirectory()
-            ));
+        $sotRoster = $this->sourceOfTruth->buildRoster();
+
+        $targetRosters = new ArrayCollection();
+        foreach ($this->targetLocations as $location) {
+            /**
+             * @var Location $location
+             */
+
+            $targetRoster = $location->buildRoster();
+            $targetRosters->add($targetRoster);
         }
-        
-        
+
+        $differences = $this->compareAllRosters($sotRoster, $targetRosters);
+        return $differences;
+    }
+
+    private function compareAllRosters(ArrayCollection $sotRoster, ArrayCollection $targetRosters)
+    {
+        $differences = new ArrayCollection();
+
+        foreach ($targetRosters as $roster) {
+            /**
+             * @var ArrayCollection $difference
+             */
+            $difference = $this->compareRosters($sotRoster, $roster);
+            if ($difference->count()) {
+                $differences->add($difference);
+            }
+        }
+
+        return $differences;
+    }
+
+
+    private function compareRosters(ArrayCollection $sotRoster, ArrayCollection $targetRoster)
+    {
+        $difference = new ArrayCollection();
+
+
+        foreach ($sotRoster->toArray() as  $fileName => $diffItem) {
+            /**
+             * @var DiffItem $diffItem
+             */
+
+            if (!$targetRoster->containsKey($fileName)) {
+                continue;
+            }
+
+            /**
+             * @var DiffItem $targetDiffItem
+             */
+            $targetDiffItem = $targetRoster->get($fileName);
+
+            if ($diffItem->getHash() == $targetDiffItem->getHash()) {
+                continue;
+            }
+
+
+            
+
+        }
+
+        return $difference;
     }
 }
