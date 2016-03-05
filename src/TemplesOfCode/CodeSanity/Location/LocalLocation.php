@@ -2,6 +2,7 @@
 
 namespace TemplesOfCode\CodeSanity\Location;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use TemplesOfCode\CodeSanity\DiffItem;
 use TemplesOfCode\CodeSanity\Exception\ShellExecutionException;
 use TemplesOfCode\CodeSanity\Command\FindCommand;
@@ -12,6 +13,7 @@ use TemplesOfCode\CodeSanity\Command\XargsCommand;
 use TemplesOfCode\CodeSanity\Command\CdCommand;
 use TemplesOfCode\CodeSanity\CommandChain;
 use TemplesOfCode\CodeSanity\Location;
+use TemplesOfCode\CodeSanity\RosterItem;
 
 /**
  * Class LocalLocation
@@ -77,14 +79,20 @@ class LocalLocation extends Location
             throw $shellException;
         }
 
+        $rosterItems = new ArrayCollection();
         foreach ($output as $line) {
             $hashAndFile = preg_split('/\s+/', $line);
 
-            $item = new DiffItem();
+            $item = new RosterItem();
             $item->setHash($hashAndFile[0]);
             $item->setRelativeFileName($hashAndFile[1]);
-            $this->roster->set($hashAndFile[1], $item);
+            $item->setRoster($this->roster);
+
+            $rosterItems->set($hashAndFile[1], $item);
         }
+
+        $this->roster->setRoster($rosterItems);
+        $this->roster->setLocation($this);
 
         return $this->roster;
     }

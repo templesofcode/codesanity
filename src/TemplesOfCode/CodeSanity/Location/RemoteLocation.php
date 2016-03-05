@@ -2,7 +2,7 @@
 
 namespace TemplesOfCode\CodeSanity\Location;
 
-use TemplesOfCode\CodeSanity\DiffItem;
+use TemplesOfCode\CodeSanity\RosterItem;
 use TemplesOfCode\CodeSanity\RemoteConnection;
 use TemplesOfCode\CodeSanity\Location;
 use TemplesOfCode\CodeSanity\Command\ShellCommand;
@@ -14,7 +14,7 @@ use TemplesOfCode\CodeSanity\Command\XargsCommand;
 use TemplesOfCode\CodeSanity\Command\SortCommand;
 use TemplesOfCode\CodeSanity\Command\CdCommand;
 use TemplesOfCode\CodeSanity\Command\Sha1SumCommand;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Class RemoteLocation
  * @package TemplesOfCode\CodeSanity\Location
@@ -140,14 +140,20 @@ class RemoteLocation extends Location
             throw $shellException;
         }
 
+        $rosterItems = new ArrayCollection();
         foreach ($output as $line) {
             $hashAndFile = preg_split('/\s+/', $line);
 
-            $item = new DiffItem();
+            $item = new RosterItem();
             $item->setHash($hashAndFile[0]);
             $item->setRelativeFileName($hashAndFile[1]);
-            $this->roster->add($item);
+            $item->setRoster($this->roster);
+
+            $rosterItems->set($hashAndFile[1], $item);
         }
+
+        $this->roster->setRoster($rosterItems);
+        $this->roster->setLocation($this);
 
         return $this->roster;
     }

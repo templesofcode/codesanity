@@ -10,7 +10,7 @@ abstract class Location
     protected $tempStorage = '/tmp';
 
     /**
-     * @var ArrayCollection<DiffItem>
+     * @var Roster
      */
     protected $roster = null;
 
@@ -31,11 +31,10 @@ abstract class Location
     public function __construct($directory)
     {
         $this->directory = $directory;
-        $this->roster = new ArrayCollection();
     }
 
     /**
-     * @return ArrayCollection
+     * @return Roster
      */
     public function getRoster()
     {
@@ -43,10 +42,10 @@ abstract class Location
     }
 
     /**
-     * @param ArrayCollection $roster
+     * @param Roster $roster
      * @return $this
      */
-    public function setRoster($roster)
+    public function setRoster(Roster $roster)
     {
         $this->roster = $roster;
         return $this;

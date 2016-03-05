@@ -1,6 +1,5 @@
 <?php
 
-
 namespace TemplesOfCode\CodeSanity;
 
 /**
@@ -10,48 +9,49 @@ namespace TemplesOfCode\CodeSanity;
 class DiffItem
 {
     /**
-     * @var string
+     * @var RosterItem
      */
-    private $hash;
-
-    /***
-     * @var string
-     */
-    private $relativeFileName;
+    protected $sotRosterItem;
 
     /**
-     * @return string
+     * @var RosterItem
      */
-    public function getHash()
+    protected $targetRosterItem;
+
+    /**
+     * @return RosterItem
+     */
+    public function getSotRosterItem()
     {
-        return $this->hash;
+        return $this->sotRosterItem;
     }
 
     /**
-     * @param string $hash
+     * @param RosterItem $sotRosterItem
      * @return DiffItem
      */
-    public function setHash($hash)
+    public function setSotRosterItem(RosterItem $sotRosterItem)
     {
-        $this->hash = $hash;
+        $this->sotRosterItem = $sotRosterItem;
         return $this;
     }
 
     /**
-     * @return string
+     * @return RosterItem
      */
-    public function getRelativeFileName()
+    public function getTargetRosterItem()
     {
-        return $this->relativeFileName;
+        return $this->targetRosterItem;
     }
 
     /**
-     * @param string $relativeFileName
+     * @param RosterItem $targetRosterItem
      * @return DiffItem
      */
-    public function setRelativeFileName($relativeFileName)
+    public function setTargetRosterItem(RosterItem $targetRosterItem)
     {
-        $this->relativeFileName = $relativeFileName;
+        $this->targetRosterItem = $targetRosterItem;
         return $this;
     }
+
 }

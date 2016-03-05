@@ -134,7 +134,7 @@ class DiffFinder
         }
 
         /**
-         * @var ArrayCollection<DiffItem> $sotRoster
+         * @var Roster $sotRoster
          */
         $sotRoster = $this->sourceOfTruth->buildRoster();
 
@@ -144,6 +144,9 @@ class DiffFinder
              * @var Location $location
              */
 
+            /**
+             * @var Roster $targetRoster
+             */
             $targetRoster = $location->buildRoster();
             $targetRosters->add($targetRoster);
         }
@@ -152,7 +155,12 @@ class DiffFinder
         return $differences;
     }
 
-    private function compareAllRosters(ArrayCollection $sotRoster, ArrayCollection $targetRosters)
+    /**
+     * @param Roster $sotRoster
+     * @param ArrayCollection $targetRosters
+     * @return ArrayCollection
+     */
+    private function compareAllRosters(Roster $sotRoster, ArrayCollection $targetRosters)
     {
         $differences = new ArrayCollection();
 
@@ -160,44 +168,80 @@ class DiffFinder
             /**
              * @var ArrayCollection $difference
              */
-            $difference = $this->compareRosters($sotRoster, $roster);
-            if ($difference->count()) {
-                $differences->add($difference);
+            $differenceSet = $this->compareRosters($sotRoster, $roster);
+            if ($differenceSet->count()) {
+                $differences->add($differenceSet);
             }
         }
 
         return $differences;
     }
 
-
-    private function compareRosters(ArrayCollection $sotRoster, ArrayCollection $targetRoster)
+    /**
+     * @param Roster $sotRoster
+     * @param Roster $targetRoster
+     * @return ArrayCollection
+     */
+    private function compareRosters(Roster $sotRoster, Roster $targetRoster)
     {
-        $difference = new ArrayCollection();
+        $differenceSet = new ArrayCollection();
 
+        $processedItems = new ArrayCollection();
 
-        foreach ($sotRoster->toArray() as  $fileName => $diffItem) {
+        foreach ($sotRoster->getRoster()->toArray() as  $fileName => $rosterItem) {
             /**
-             * @var DiffItem $diffItem
+             * @var RosterItem $rosterItem
              */
 
-            if (!$targetRoster->containsKey($fileName)) {
+            if (!$targetRoster->getRoster()->containsKey($fileName)) {
+                /**
+                 * Target roster missing the source of truth roster item.
+                 */
+                $difference = new DiffItem();
+                $difference->setSotRosterItem($rosterItem);
+                $differenceSet->set($fileName, $difference);
                 continue;
             }
 
             /**
-             * @var DiffItem $targetDiffItem
+             * @var RosterItem $targetItem
              */
-            $targetDiffItem = $targetRoster->get($fileName);
+            $targetItem = $targetRoster->getRoster()->get($fileName);
 
-            if ($diffItem->getHash() == $targetDiffItem->getHash()) {
+            $processedItems->add($targetItem->getRelativeFileName());
+
+            if ($rosterItem->getHash() == $targetItem->getHash()) {
                 continue;
             }
 
-
-            
-
+            /**
+             * Items differ
+             */
+            $difference = new DiffItem();
+            $difference->setSotRosterItem($rosterItem);
+            $difference->setTargetRosterItem($targetItem);
+            $differenceSet->set($fileName, $difference);
         }
 
-        return $difference;
+        /**
+         * Find the items missing from source of truth.
+         */
+        foreach ($targetRoster->getRoster()->toArray() as $fileName => $rosterItem) {
+            if ($processedItems->contains($fileName)) {
+                /**
+                 * Already dealt with in previous loop
+                 */
+                continue;
+            }
+
+            /**
+             * Source of truth roster missing the target roster item.
+             */
+            $difference = new DiffItem();
+            $difference->setTargetRosterItem($rosterItem);
+            $differenceSet->set($fileName, $difference);
+        }
+
+        return $differenceSet;
     }
 }
