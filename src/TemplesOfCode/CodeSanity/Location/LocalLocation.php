@@ -3,7 +3,6 @@
 namespace TemplesOfCode\CodeSanity\Location;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use TemplesOfCode\CodeSanity\DiffItem;
 use TemplesOfCode\CodeSanity\Exception\ShellExecutionException;
 use TemplesOfCode\CodeSanity\Command\FindCommand;
 use TemplesOfCode\CodeSanity\Command\SedCommand;
@@ -100,7 +99,7 @@ class LocalLocation extends Location
     /**
      * @return CommandChain
      */
-    private function buildPipeChainedCommands()
+    protected function buildPipeChainedCommands()
     {
         /**
          * @var string $chainLink
@@ -138,7 +137,7 @@ class LocalLocation extends Location
     /**
      * @return CommandChain
      */
-    private function buildSequenceChainedCommands()
+    protected function buildSequenceChainedCommands()
     {
         $sequenceChainedCommands = new CommandChain(';');
 
@@ -147,5 +146,17 @@ class LocalLocation extends Location
         $sequenceChainedCommands->addCommand($cdCommand);
 
         return $sequenceChainedCommands;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        if (empty($this->name)) {
+            $this->name = $this->getDirectory();
+        }
+
+        return $this->name;
     }
 }

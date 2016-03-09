@@ -22,6 +22,11 @@ abstract class Location
     /**
      * @var string
      */
+    protected $name;
+
+    /**
+     * @var string
+     */
     protected $hashesRosterFileName = 'hashes.roster';
 
     /**
@@ -97,4 +102,11 @@ abstract class Location
      * @throws ShellExecutionException
      */
     abstract public function buildRoster();
+
+
+    /**
+     * @return string
+     */
+    abstract public function getName();
+
 }

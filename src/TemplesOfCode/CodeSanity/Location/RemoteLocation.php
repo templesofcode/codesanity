@@ -25,7 +25,7 @@ class RemoteLocation extends Location
      * @var RemoteConnection
      */
     protected $remoteConnection;
-    
+
     /**
      * @return RemoteConnection
      */
@@ -158,7 +158,7 @@ class RemoteLocation extends Location
         return $this->roster;
     }
 
-    public function buildRemoteCommandChain()
+    protected function buildRemoteCommandChain()
     {
         /**
          * @var CommandChain $pipeChainedCommands
@@ -176,7 +176,7 @@ class RemoteLocation extends Location
     /**
      * @return CommandChain
      */
-    private function buildPipeChainedCommands()
+    protected function buildPipeChainedCommands()
     {
         /**
          * @var string $chainLink
@@ -214,7 +214,7 @@ class RemoteLocation extends Location
     /**
      * @return CommandChain
      */
-    private function buildSequenceChainedCommands()
+    protected function buildSequenceChainedCommands()
     {
         $sequenceChainedCommands = new CommandChain(';');
 
@@ -225,4 +225,27 @@ class RemoteLocation extends Location
         return $sequenceChainedCommands;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        if (empty($this->name)) {
+            /**
+             * @var RemoteConnection
+             */
+            $remoteConnection = $this->getRemoteConnection();
+
+            /**
+             * @var string
+             */
+            $this->name = sprintf(
+                '%s@%s:%s',
+                $remoteConnection->getUsername(),
+                $remoteConnection->getHost(),
+                $this->getDirectory()
+            );
+        }
+        return $this->name;
+    }
 }
