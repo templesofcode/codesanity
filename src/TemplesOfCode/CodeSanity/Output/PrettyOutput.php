@@ -3,7 +3,6 @@
 namespace TemplesOfCode\CodeSanity\Output;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Console\Output\OutputInterface;
 use TemplesOfCode\CodeSanity\DiffItem;
 use TemplesOfCode\CodeSanity\Output;
 use TemplesOfCode\CodeSanity\RosterItem;
@@ -21,14 +20,18 @@ class PrettyOutput extends Output
     protected static $border;
 
 
-    public function __construct(ArrayCollection $differences, OutputInterface $output)
+    /**
+     * {@inheritdoc}
+     */
+    protected function init()
     {
         static::$border = str_repeat('-', strlen(static::$mask));
-
-        parent::__construct($differences, $output);
     }
 
 
+    /**
+     *
+     */
     public function write()
     {
 
@@ -57,6 +60,9 @@ class PrettyOutput extends Output
         }
     }
 
+    /**
+     * @param DiffItem $diffItem
+     */
     private function writeDiffItem(DiffItem $diffItem)
     {
         /**
@@ -102,6 +108,9 @@ class PrettyOutput extends Output
         $this->output->writeln($line);
     }
 
+    /**
+     *
+     */
     private function writeHeader()
     {
         $this->output->writeln(static::$border);

@@ -54,14 +54,26 @@ abstract class Output
      */
     protected $differences;
 
+    /**
+     * Output constructor.
+     * @param ArrayCollection $differences
+     * @param OutputInterface $output
+     */
     public function __construct(ArrayCollection $differences, OutputInterface $output)
     {
         $this->differences = $differences;
         $this->output = $output;
+
+        $this->init();
     }
 
     /**
      *
      */
     abstract public function write();
+
+    /**
+     * Perform any logic at construction time.
+     */
+    abstract protected function init();
 }

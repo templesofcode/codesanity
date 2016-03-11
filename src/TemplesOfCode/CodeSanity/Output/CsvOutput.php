@@ -16,6 +16,14 @@ class CsvOutput extends Output
 {
 
     /**
+     * {@inheritdoc}
+     */
+    protected function init()
+    {
+
+    }
+
+    /**
      * @param OutputInterface $output
      */
     public function write()
