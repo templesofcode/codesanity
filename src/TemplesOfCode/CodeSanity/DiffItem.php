@@ -11,12 +11,12 @@ class DiffItem
     /**
      * @var RosterItem
      */
-    protected $sotRosterItem;
+    protected $sotRosterItem = null;
 
     /**
      * @var RosterItem
      */
-    protected $targetRosterItem;
+    protected $targetRosterItem = null;
 
     /**
      * @return RosterItem
