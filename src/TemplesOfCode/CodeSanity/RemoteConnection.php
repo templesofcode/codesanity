@@ -68,7 +68,7 @@ class RemoteConnection extends SSH
      * @var bool
      * @return bool
      */
-    private function testConnection()
+    protected function testConnection()
     {
         /**
          * @var ShellCommand $sshCommand
