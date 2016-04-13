@@ -43,7 +43,15 @@ class DiffFinder
      */
     public function addTargetLocation(Location $targetLocation)
     {
-        if (!$this->targetLocations->contains($targetLocation)) {
+        /**
+         * @var bool $targetLocationPresents
+         */
+        $targetLocationPresent = $this
+            ->targetLocations
+            ->contains($targetLocation)
+        ;
+
+        if (!$targetLocationPresent) {
             $this->targetLocations->add($targetLocation);
         }
 
@@ -56,7 +64,15 @@ class DiffFinder
      */
     public function removeTargetLocation(Location $targetLocation)
     {
-        if ($this->targetLocations->contains($targetLocation)) {
+        /**
+         * @var bool $targetLocationPresent
+         */
+        $targetLocationPresent = $this
+            ->targetLocations
+            ->contains($targetLocation)
+        ;
+
+        if ($targetLocationPresent) {
             $this->targetLocations->removeElement($targetLocation);
         }
 
@@ -84,7 +100,7 @@ class DiffFinder
     /**
      * @return bool
      */
-    private function validateResources()
+    protected function validateResources()
     {
         /**
          * @var bool $validSourceOfTruth
@@ -110,7 +126,7 @@ class DiffFinder
             /**
              * @var bool $validTargetLocations
              */
-            $validTargetLocations &= $location->isValid();
+            $validTargetLocations = $validTargetLocations && $location->isValid();
             if (!$validTargetLocations) {
                 break;
             }
@@ -120,7 +136,7 @@ class DiffFinder
     }
 
     /**
-     * @return bool|null
+     * @return ArrayCollection
      * @throws \Exception
      */
     public function find()
@@ -132,11 +148,6 @@ class DiffFinder
         if (!$resourcesValidated) {
             throw new \Exception("Resources needed to find differences not complete");
         }
-
-        /**
-         * @var Roster $sotRoster
-         */
-        $sotRoster = $this->sourceOfTruth->buildRoster();
 
         $targetRosters = new ArrayCollection();
         foreach ($this->targetLocations as $location) {
@@ -150,6 +161,11 @@ class DiffFinder
             $targetRoster = $location->buildRoster();
             $targetRosters->add($targetRoster);
         }
+
+        /**
+         * @var Roster $sotRoster
+         */
+        $sotRoster = $this->sourceOfTruth->buildRoster();
 
         $differences = $this->compareAllRosters($sotRoster, $targetRosters);
         return $differences;
@@ -227,6 +243,8 @@ class DiffFinder
          * Find the items missing from source of truth.
          */
         foreach ($targetRoster->getRoster()->toArray() as $fileName => $rosterItem) {
+
+            $fileName = (string)$fileName;
             if ($processedItems->contains($fileName)) {
                 /**
                  * Already dealt with in previous loop

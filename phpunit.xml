@@ -1,11 +1,14 @@
 <phpunit>
     <filter>
         <whitelist>
-            <directory suffix=".php">.//src/TemplesOfCode/CodeSanity/</directory>
+            <directory suffix=".php">./src/TemplesOfCode/CodeSanity/</directory>
             <file>RemoteConnection</file>
+            <file>RosterItem</file>
+            <file>Roster</file>
+            <file>Output</file>
             <!--<exclude>-->
-                <!--<directory suffix=".php">/path/to/files</directory>-->
-                <!--<file>/path/to/file</file>-->
+                <!--<directory suffix=".php">./src/TemplesOfCode/CodeSanity/</directory>-->
+                <!--<file>/Roster</file>-->
             <!--</exclude>-->
         </whitelist>
     </filter>

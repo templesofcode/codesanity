@@ -27,24 +27,6 @@ abstract class Output
     protected $headerEnabled;
 
     /**
-     * @return boolean
-     */
-    public function isHeaderEnabled()
-    {
-        return $this->headerEnabled;
-    }
-
-    /**
-     * @param boolean $headerEnabled
-     * @return $this
-     */
-    public function setHeaderEnabled($headerEnabled)
-    {
-        $this->headerEnabled = $headerEnabled;
-        return $this;
-    }
-
-    /**
      * @var OutputInterface
      */
     protected  $output;
@@ -65,6 +47,24 @@ abstract class Output
         $this->output = $output;
 
         $this->init();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isHeaderEnabled()
+    {
+        return $this->headerEnabled;
+    }
+
+    /**
+     * @param boolean $headerEnabled
+     * @return $this
+     */
+    public function setHeaderEnabled($headerEnabled)
+    {
+        $this->headerEnabled = $headerEnabled;
+        return $this;
     }
 
     /**

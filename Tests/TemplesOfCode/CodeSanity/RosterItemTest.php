@@ -26,7 +26,7 @@ class RosterItemTest extends \PHPUnit_Framework_TestCase
          */
         $returnedRoster = $rosterItem->getRoster();
 
-        $this->assertSame($rosterItem, $returnedRoster);
+        $this->assertSame($roster, $returnedRoster);
     }
 
     /**
@@ -61,6 +61,4 @@ class RosterItemTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($relativeFileName, $returnedRelativeFileName);
     }
-
-
 }

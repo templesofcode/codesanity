@@ -34,7 +34,6 @@ class MockLocation extends Location
      */
     public function buildRoster()
     {
-        return new ArrayCollection();
     }
 }
 
@@ -65,7 +64,12 @@ class RosterTest extends \PHPUnit_Framework_TestCase
     public function testLocationProperty()
     {
         $location = new MockLocation('/dir1/dir2/dir3');
-        $roster = new Roster($location);
+        $roster = new Roster();
+        $roster->setLocation($location);
+
+        /**
+         * @var Location $returnedLocation
+         */
         $returnedLocation = $roster->getLocation();
         $this->assertSame($location, $returnedLocation);
     }
