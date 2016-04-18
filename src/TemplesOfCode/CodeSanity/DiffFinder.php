@@ -182,7 +182,7 @@ class DiffFinder
 
         foreach ($targetRosters as $roster) {
             /**
-             * @var ArrayCollection $difference
+             * @var ArrayCollection $differenceSet
              */
             $differenceSet = $this->compareRosters($sotRoster, $roster);
             if ($differenceSet->count()) {
@@ -205,6 +205,9 @@ class DiffFinder
         $processedItems = new ArrayCollection();
 
         foreach ($sotRoster->getRoster()->toArray() as  $fileName => $rosterItem) {
+
+            $fileName = (string)$fileName;
+
             /**
              * @var RosterItem $rosterItem
              */
@@ -224,7 +227,9 @@ class DiffFinder
              */
             $targetItem = $targetRoster->getRoster()->get($fileName);
 
-            $processedItems->add($targetItem->getRelativeFileName());
+            $targetFilename = $targetItem->getRelativeFileName();
+
+            $processedItems->add($targetFilename);
 
             if ($rosterItem->getHash() == $targetItem->getHash()) {
                 continue;
