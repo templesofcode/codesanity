@@ -3,7 +3,7 @@
 namespace TemplesOfCode\CodeSanity\Output;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Console\Output\OutputInterface;
+//use Symfony\Component\Console\Output\OutputInterface;
 use TemplesOfCode\CodeSanity\Output;
 use TemplesOfCode\CodeSanity\DiffItem;
 use TemplesOfCode\CodeSanity\RosterItem;
@@ -24,7 +24,7 @@ class CsvOutput extends Output
     }
 
     /**
-     * @param OutputInterface $output
+     *
      */
     public function write()
     {
@@ -42,7 +42,7 @@ class CsvOutput extends Output
     }
 
     /**
-     * @param OutputInterface $output
+     *
      */
     private function writeHeader()
     {

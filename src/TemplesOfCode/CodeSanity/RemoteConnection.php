@@ -3,7 +3,7 @@
 namespace TemplesOfCode\CodeSanity;
 
 use AFM\Rsync\SSH;
-use TemplesOfCode\CodeSanity\Command\ShellCommand;
+use TemplesOfCode\Sofa\Command\ShellCommand;
 
 /**
  * Class RemoteConnection

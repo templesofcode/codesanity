@@ -10,11 +10,19 @@
       "email": "templesofcode@gmail.com"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/templesofcode/sofa-php"
+    }
+  ],
   "require": {
     "php": ">=5.4",
     "doctrine/collections": "^1.3",
     "albertofem/rsync-lib": "dev-master",
-    "symfony/console": "^3.0"
+    "symfony/console": "^3.0",
+    "templesofcode/sofa-php": "dev-master"
+
   },
   "autoload": {
     "psr-4": { "TemplesOfCode\\CodeSanity\\": "src/TemplesOfCode/CodeSanity" }

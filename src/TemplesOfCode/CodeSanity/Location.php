@@ -3,7 +3,7 @@
 namespace TemplesOfCode\CodeSanity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use TemplesOfCode\CodeSanity\Exception\ShellExecutionException;
+use TemplesOfCode\Sofa\Exception\ShellExecutionException;
 
 abstract class Location
 {

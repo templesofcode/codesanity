@@ -1,7 +1,7 @@
 <?php
 
 namespace TemplesOfCode\CodeSanity\Test;
-use TemplesOfCode\CodeSanity\Command\ShellCommand;
+use TemplesOfCode\Sofa\Command\ShellCommand;
 use TemplesOfCode\CodeSanity\RemoteConnection;
 
 /**
@@ -175,7 +175,7 @@ class RemoteConnectionTest extends \PHPUnit_Framework_TestCase
      * @var string
      */
     private static $fqcn =<<<FQCN
-TemplesOfCode\CodeSanity\Command\ShellCommand
+TemplesOfCode\Sofa\Command\ShellCommand
 FQCN;
 
     /**

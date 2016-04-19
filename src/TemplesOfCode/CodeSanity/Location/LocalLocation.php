@@ -3,14 +3,14 @@
 namespace TemplesOfCode\CodeSanity\Location;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use TemplesOfCode\CodeSanity\Exception\ShellExecutionException;
-use TemplesOfCode\CodeSanity\Command\FindCommand;
-use TemplesOfCode\CodeSanity\Command\SedCommand;
-use TemplesOfCode\CodeSanity\Command\SortCommand;
-use TemplesOfCode\CodeSanity\Command\Sha1SumCommand;
-use TemplesOfCode\CodeSanity\Command\XargsCommand;
-use TemplesOfCode\CodeSanity\Command\CdCommand;
-use TemplesOfCode\CodeSanity\CommandChain;
+use TemplesOfCode\Sofa\Exception\ShellExecutionException;
+use TemplesOfCode\Sofa\Command\FindCommand;
+use TemplesOfCode\Sofa\Command\SedCommand;
+use TemplesOfCode\Sofa\Command\SortCommand;
+use TemplesOfCode\Sofa\Command\Sha1SumCommand;
+use TemplesOfCode\Sofa\Command\XargsCommand;
+use TemplesOfCode\Sofa\Command\CdCommand;
+use TemplesOfCode\Sofa\CommandChain;
 use TemplesOfCode\CodeSanity\Location;
 use TemplesOfCode\CodeSanity\RosterItem;
 
