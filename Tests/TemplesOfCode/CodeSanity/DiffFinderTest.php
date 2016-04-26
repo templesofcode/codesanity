@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: omarziranhua
- * Date: 4/9/16
- * Time: 11:39 PM
- */
 
 namespace TemplesOfCode\CodeSanity\Test;
-
 
 //use SebastianBergmann\Diff\Diff;
 use TemplesOfCode\CodeSanity\DiffFinder;

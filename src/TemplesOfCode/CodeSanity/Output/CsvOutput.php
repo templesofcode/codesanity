@@ -75,10 +75,12 @@ class CsvOutput extends Output
              */
             $sotName = $sotRosterItem->getRoster()->getLocation()->getName();
             $sotFileName = $sotRosterItem->getRelativeFileName();
+            $sotItem = $sotName .'/'.$sotFileName;
+            $sotHash = $sotRosterItem->getHash();
         }
         else {
-            $sotName = 'Missing';
-            $sotFileName = 'Missing';
+            $sotItem = 'Missing';
+            $sotHash = 'Missing';
         }
 
         /**
@@ -91,10 +93,13 @@ class CsvOutput extends Output
              */
             $targetName = $targetRosterItem->getRoster()->getLocation()->getName();
             $targetFileName = $targetRosterItem->getRelativeFileName();
+
+            $targetItem = $targetName .'/'. $targetFileName;
+            $targetHash = $targetRosterItem->getHash();
         }
         else {
-            $targetName = 'Missing';
-            $targetFileName = 'Missing';
+            $targetItem = 'Missing';
+            $targetHash = 'Missing';
         }
 
         /**
@@ -102,10 +107,10 @@ class CsvOutput extends Output
          */
         $line = sprintf(
             '%s,%s,%s,%s',
-            $sotName,
-            $sotFileName,
-            $targetName,
-            $targetFileName
+            $sotItem,
+            $sotHash,
+            $targetItem,
+            $targetHash
         );
 
         $this->output->writeln($line);
