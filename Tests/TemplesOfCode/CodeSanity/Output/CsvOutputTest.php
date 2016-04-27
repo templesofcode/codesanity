@@ -96,7 +96,7 @@ class MockCsvOutput extends CsvOutput
 class CsvOutputTest extends \PHPUnit_Framework_TestCase
 {
     private static $csvExpectedOutput=<<<OUT
-Source of truth Location,Source of truth File Hash,Target Location,Target FileHash
+Source of truth Location,Source of truth File Hash,Target Location,Target File Hash
 /dir1/dir2/dir3/22222,9o9o9o9o9o,/dir1/dir2/dir4/22222,1a9b9508b6003b68ddfe03a9c8cbc4bd4388339b
 /dir1/dir2/dir3/33333,403d9917c3e950798601addf7ba82cd3c83f344b,/dir1/dir2/dir4/33333,8a8a8a8a8
 /dir1/dir2/dir3/88888,9eab102e8f9431bb23016851d11e658e0b20b730,Missing,Missing
@@ -130,8 +130,6 @@ OUT;
         $targetLocation1->setRoster($roster2);
         $finder->addTargetLocation($targetLocation1);
         $targetLocation1->buildRoster();
-
-
 
         /**
          * Diff where difference between two locations, modify sot

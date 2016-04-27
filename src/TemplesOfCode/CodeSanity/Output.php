@@ -18,7 +18,7 @@ abstract class Output
         'Source of truth Location',
         'Source of truth File Hash',
         'Target Location',
-        'Target FileHash'
+        'Target File Hash'
     ];
 
     /**

@@ -12,12 +12,25 @@ class PrettyOutput extends Output
     /**
      * @var string
      */
-    protected static $mask = '| %-70.70s | %-45.45s | %-70.70s | %-45.45s |';
+    protected static $maskTemplate = '| %%-%d.%ds | %%-%d.%ds | %%-%d.%ds | %%-%d.%ds |';
+
+    protected $mask = '';
+
+    /**
+     * @var int
+     */
+    protected  $fileNameSpaceLength = 30;
+
+    /**
+     * @var int
+     */
+    protected  $hashSpaceLength = 40;
+
 
     /**
      * @var string
      */
-    protected static $border;
+    protected $border;
 
 
     /**
@@ -25,9 +38,98 @@ class PrettyOutput extends Output
      */
     protected function init()
     {
-        static::$border = str_repeat('-', strlen(static::$mask));
+        $this->setBorder();
+        $this->setMask();
     }
 
+    /**
+     *
+     */
+    protected function setBorder()
+    {
+        /**
+         * Initial constant lengths
+         * @var int $borderLength
+         */
+        $borderLength = 13;
+        $borderLength = $borderLength
+            + ($this->fileNameSpaceLength * 2)
+            + ($this->hashSpaceLength * 2)
+        ;
+
+        $this->border = str_repeat('-', $borderLength);
+
+    }
+
+    /**
+     *
+     */
+    protected function setMask()
+    {
+           $this->mask = sprintf(
+               static::$maskTemplate,
+               $this->getFileNameSpaceLength(),
+               $this->getFileNameSpaceLength(),
+               $this->getHashSpaceLength(),
+               $this->getHashSpaceLength(),
+               $this->getFileNameSpaceLength(),
+               $this->getFileNameSpaceLength(),
+               $this->getHashSpaceLength(),
+               $this->getHashSpaceLength()
+           );
+    }
+
+    /**
+     * @return int
+     */
+    public function getFileNameSpaceLength()
+    {
+        return $this->fileNameSpaceLength;
+    }
+
+    /**
+     * @param int $fileNameSpaceLength
+     * @return PrettyOutput
+     */
+    public function setFileNameSpaceLength($fileNameSpaceLength)
+    {
+        if ($fileNameSpaceLength == $this->fileNameSpaceLength) {
+            return $this;
+        }
+
+        $this->fileNameSpaceLength = $fileNameSpaceLength;
+
+        $this->setBorder();
+        $this->setMask();
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHashSpaceLength()
+    {
+        return $this->hashSpaceLength;
+    }
+
+    /**
+     * @param int $hashSpaceLength
+     * @return PrettyOutput
+     */
+    public function setHashSpaceLength($hashSpaceLength)
+    {
+        if ($hashSpaceLength == $this->hashSpaceLength) {
+            return $this;
+        }
+
+        $this->hashSpaceLength = $hashSpaceLength;
+
+        $this->setBorder();
+        $this->setMask();
+
+        return $this;
+    }
 
     /**
      *
@@ -39,7 +141,7 @@ class PrettyOutput extends Output
             $this->writeHeader();
         }
 
-        $this->output->writeln(static::$border);
+        $this->output->writeln($this->border);
 
         foreach ($this->differences as $differenceSet) {
             /**
@@ -47,6 +149,8 @@ class PrettyOutput extends Output
              */
             $this->writeDifferenceSet($differenceSet);
         }
+
+        $this->output->writeln($this->border);
     }
 
     private function writeDifferenceSet(ArrayCollection $differenceSet)
@@ -65,6 +169,10 @@ class PrettyOutput extends Output
      */
     private function writeDiffItem(DiffItem $diffItem)
     {
+
+
+        $sot = $sotHash = 'Missing';
+
         /**
          * @var RosterItem $sotRosterItem
          */
@@ -75,11 +183,13 @@ class PrettyOutput extends Output
              */
             $sotName = $sotRosterItem->getRoster()->getLocation()->getName();
             $sotFileName = $sotRosterItem->getRelativeFileName();
+            $sot = $sotName . '/' . $sotFileName;
+
+            $sotHash = $sotRosterItem->getHash();
         }
-        else {
-            $sotName = 'Missing';
-            $sotFileName = 'Missing';
-        }
+
+
+        $target = $targetHash = 'Missing';
 
         /**
          * @var RosterItem $targetRosterItem
@@ -91,18 +201,16 @@ class PrettyOutput extends Output
              */
             $targetName = $targetRosterItem->getRoster()->getLocation()->getName();
             $targetFileName = $targetRosterItem->getRelativeFileName();
-        }
-        else {
-            $targetName = 'Missing';
-            $targetFileName = 'Missing';
+            $target = $targetName . '/' . $targetFileName;
+            $targetHash = $targetRosterItem->getHash();
         }
 
         $line = sprintf(
-            static::$mask,
-            $sotName,
-            $sotFileName,
-            $targetName,
-            $targetFileName
+            $this->mask,
+            $sot,
+            $sotHash,
+            $target,
+            $targetHash
         );
 
         $this->output->writeln($line);
@@ -113,9 +221,9 @@ class PrettyOutput extends Output
      */
     private function writeHeader()
     {
-        $this->output->writeln(static::$border);
+        $this->output->writeln($this->border);
         $this->output->writeln(sprintf(
-            static::$mask,
+            $this->mask,
             static::$header[0],
             static::$header[1],
             static::$header[2],
