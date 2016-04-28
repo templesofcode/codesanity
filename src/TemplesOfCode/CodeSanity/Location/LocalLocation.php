@@ -20,6 +20,16 @@ use TemplesOfCode\CodeSanity\RosterItem;
  */
 class LocalLocation extends Location
 {
+
+    /*
+     * @param string $directory
+     * @return bool
+     */
+    protected function isReadable($directory)
+    {
+        return is_readable($directory);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -28,8 +38,8 @@ class LocalLocation extends Location
         /**
          * @var bool $verdict
          */
-        $verdict = !empty($this->directory)
-            && !is_readable($this->directory)
+        $verdict = !empty($this->directory) &&
+            $this->isReadable($this->directory)
         ;
 
         return $verdict;

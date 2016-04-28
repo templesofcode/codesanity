@@ -14,6 +14,9 @@ class PrettyOutput extends Output
      */
     protected static $maskTemplate = '| %%-%d.%ds | %%-%d.%ds | %%-%d.%ds | %%-%d.%ds |';
 
+    /**
+     * @var string
+     */
     protected $mask = '';
 
     /**
