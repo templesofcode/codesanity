@@ -1,5 +1,33 @@
 <?php
 
+namespace TemplesOfCode\Sofa\Command {
+
+    /**
+     * Class Mocker
+     * @package TemplesOfCode\Sofa\Command
+     */
+    class Mocker
+    {
+        public static $exitStatus = 0;
+
+    }
+
+    /**
+     * @param string $command
+     * @param array $output
+     * @param int $returnVal
+     */
+    function exec($command, &$output, &$returnVal)
+    {
+        $parsedCommand = explode(' ', $command);
+        if ($parsedCommand[0] == 'which') {
+            $output[0] = $parsedCommand[1];
+        }
+
+        $returnVal = Mocker::$exitStatus;
+    }
+}
+
 namespace TemplesOfCode\CodeSanity\Location {
 
     /**
@@ -33,6 +61,19 @@ namespace TemplesOfCode\CodeSanity\Location {
 namespace TemplesOfCode\CodeSanity\Test {
 
     use TemplesOfCode\CodeSanity\Location\LocalLocation;
+    use TemplesOfCode\Sofa\CommandChain;
+
+    class MockLocalLocation extends LocalLocation
+    {
+        /**
+         * @return CommandChain
+         */
+        public function buildPipeChainedCommandsAccessor()
+        {
+            return $this->buildPipeChainedCommands();
+        }
+    }
+
 
 
     /**
@@ -41,6 +82,11 @@ namespace TemplesOfCode\CodeSanity\Test {
      */
     class LocalLocationTest extends \PHPUnit_Framework_TestCase
     {
+
+        private static $expectedCommandChain=<<<CHAIN
+find . ! -type d ! -type l -print | sed -e '"s/[[:alnum:]]/\\\\\\&/g"' | sort | sha1sum | xargs -n '1' sha1sum
+CHAIN;
+
 
         /**
          * isValid()  when the directory property is empty
@@ -77,6 +123,30 @@ namespace TemplesOfCode\CodeSanity\Test {
         }
 
         /**
+         *
+         */
+        public function testBuildPipeChainedCommands()
+        {
+            $location = new MockLocalLocation('/dir1/dir2/dir3');
+            \TemplesOfCode\CodeSanity\Location\Mocker::$isReadableReturnValue = true;
+
+            /**
+             * @var CommandChain $commandChain
+             */
+            $commandChain = $location->buildPipeChainedCommandsAccessor();
+
+            /**
+             * @var string $command
+             */
+            $command = $commandChain->getCommand();
+
+            $this->assertEquals(
+                static::$expectedCommandChain,
+                $command
+            );
+        }
+
+        /**
          * Test exception when isValid fails during buildRoster() call.
          *
          * @expectedException \InvalidArgumentException
@@ -88,5 +158,6 @@ namespace TemplesOfCode\CodeSanity\Test {
             $location->buildRoster();
 
         }
+
     }
 }
