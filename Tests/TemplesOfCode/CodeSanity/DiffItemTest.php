@@ -3,7 +3,6 @@
 namespace TemplesOfCode\CodeSanity\Test;
 
 
-use SebastianBergmann\Diff\Diff;
 use TemplesOfCode\CodeSanity\DiffItem;
 use TemplesOfCode\CodeSanity\RosterItem;
 

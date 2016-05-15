@@ -31,7 +31,7 @@ class PrettyOutputTestMockLocation extends Location
      */
     public function buildRoster()
     {
-        if ($this->roster->getRoster()->count()) {
+        if ($this->roster->getRosterItems()->count()) {
             return $this->roster;
         }
 
@@ -46,7 +46,7 @@ class PrettyOutputTestMockLocation extends Location
             $rosterItems->set($mockFile, $item);
         }
 
-        $this->roster->setRoster($rosterItems);
+        $this->roster->setRosterItems($rosterItems);
         $this->roster->setLocation($this);
         return $this->roster;
     }
@@ -174,13 +174,13 @@ OUT;
          */
         $item = $sotLocation
             ->getRoster()
-            ->getRoster()
+            ->getRosterItems()
             ->get('22222');
         $item->setHash('9o9o9o9o9o');
 
         $sotLocation
             ->getRoster()
-            ->getRoster()
+            ->getRosterItems()
             ->set('22222', $item);
         /**
          * Diff where difference between two locations, modify target
@@ -191,13 +191,13 @@ OUT;
          */
         $item2 = $targetLocation1
             ->getRoster()
-            ->getRoster()
+            ->getRosterItems()
             ->get('33333');
         $item2->setHash('8a8a8a8a8');
 
         $targetLocation1
             ->getRoster()
-            ->getRoster()
+            ->getRosterItems()
             ->set('33333', $item2);
 
         /**
@@ -205,7 +205,7 @@ OUT;
          */
         $sotLocation
             ->getRoster()
-            ->getRoster()
+            ->getRosterItems()
             ->remove('77777');
 
         /**
@@ -213,7 +213,7 @@ OUT;
          */
         $targetLocation1
             ->getRoster()
-            ->getRoster()
+            ->getRosterItems()
             ->remove('88888');
 
 
@@ -238,7 +238,7 @@ OUT;
         $this->assertEquals(self::$expectedDiffs, $content);
 
         /**
-         * Update the lengths, and compsre the new output
+         * Update the lengths, and compose the new output
          */
 
         $differenceOutput->setFileNameSpaceLength(

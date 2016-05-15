@@ -51,9 +51,9 @@ class RosterTest extends \PHPUnit_Framework_TestCase
         $roster = new Roster();
 
         $rosterList = new ArrayCollection();
-        $roster->setRoster($rosterList);
+        $roster->setRosterItems($rosterList);
 
-        $returnedRosterList = $roster->getRoster();
+        $returnedRosterList = $roster->getRosterItems();
 
         $this->assertSame($rosterList, $returnedRosterList);
     }

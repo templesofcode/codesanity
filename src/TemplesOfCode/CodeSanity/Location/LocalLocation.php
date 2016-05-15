@@ -13,6 +13,7 @@ use TemplesOfCode\Sofa\Command\CdCommand;
 use TemplesOfCode\Sofa\CommandChain;
 use TemplesOfCode\CodeSanity\Location;
 use TemplesOfCode\CodeSanity\RosterItem;
+use TemplesOfCode\CodeSanity\Roster;
 
 /**
  * Class LocalLocation
@@ -89,19 +90,23 @@ class LocalLocation extends Location
         }
 
         $rosterItems = new ArrayCollection();
+
+        $roster = new Roster();
+        $roster->setLocation($this);
+
         foreach ($output as $line) {
             $hashAndFile = preg_split('/\s+/', $line);
 
             $item = new RosterItem();
             $item->setHash($hashAndFile[0]);
             $item->setRelativeFileName($hashAndFile[1]);
-            $item->setRoster($this->roster);
+            $item->setRoster($roster);
 
             $rosterItems->set($hashAndFile[1], $item);
         }
 
-        $this->roster->setRoster($rosterItems);
-        $this->roster->setLocation($this);
+        $roster->setRosterItems($rosterItems);
+        $this->setRoster($roster);
 
         return $this->roster;
     }

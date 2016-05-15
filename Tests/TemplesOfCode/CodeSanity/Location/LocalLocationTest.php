@@ -1,5 +1,30 @@
 <?php
 
+namespace TemplesOfCode\Sofa {
+
+    /**
+     * Class Mocker
+     * @package TemplesOfCode\Sofa
+     */
+    class Mocker
+    {
+        public static $exitStatus = 0;
+        public static $output = array();
+    }
+
+    /**
+     * @param string $command
+     * @param array $output
+     * @param int $returnVal
+     */
+    function exec($command, &$output, &$returnVal)
+    {
+        $returnVal = Mocker::$exitStatus;
+        $output = Mocker::$output;
+    }
+}
+
+
 namespace TemplesOfCode\Sofa\Command {
 
     /**
@@ -9,7 +34,6 @@ namespace TemplesOfCode\Sofa\Command {
     class Mocker
     {
         public static $exitStatus = 0;
-
     }
 
     /**
@@ -60,7 +84,11 @@ namespace TemplesOfCode\CodeSanity\Location {
 
 namespace TemplesOfCode\CodeSanity\Test {
 
+    use AFM\Rsync\Command;
+    use Doctrine\Common\Collections\ArrayCollection;
     use TemplesOfCode\CodeSanity\Location\LocalLocation;
+    use TemplesOfCode\CodeSanity\Roster;
+    use TemplesOfCode\CodeSanity\RosterItem;
     use TemplesOfCode\Sofa\CommandChain;
 
     class MockLocalLocation extends LocalLocation
@@ -71,6 +99,14 @@ namespace TemplesOfCode\CodeSanity\Test {
         public function buildPipeChainedCommandsAccessor()
         {
             return $this->buildPipeChainedCommands();
+        }
+
+        /**
+         * @return CommandChain
+         */
+        public function buildSequenceChainCommandsAccessor()
+        {
+            return $this->buildSequenceChainedCommands();
         }
     }
 
@@ -158,6 +194,97 @@ CHAIN;
             $location->buildRoster();
 
         }
+
+        /**
+         *
+         */
+        public function testGetName()
+        {
+            $location = new LocalLocation('/dir1/dir2/dir3');
+            $name = $location->getName();
+            $this->assertEquals('/dir1/dir2/dir3', $name);
+        }
+
+        public function testBuildSequenceChainedCommands()
+        {
+            $location = new MockLocalLocation('/dir1/dir2/dir3');
+
+            /**
+             * @var CommandChain $commandChain
+             */
+            $commandChain = $location->buildSequenceChainCommandsAccessor();
+
+            /**
+             * @var string $command
+             */
+            $command = $commandChain->getCommand();
+
+            $this->assertEquals(
+              'cd /dir1/dir2/dir3',
+                $command
+            );
+        }
+
+        /**
+         * @expectedException \TemplesOfCode\Sofa\Exception\ShellExecutionException
+         */
+        public function testBuildRosterExceptionThrow()
+        {
+            $location = new LocalLocation('/dir1/dir2/dir3');
+            \TemplesOfCode\CodeSanity\Location\Mocker::$isReadableReturnValue = true;
+            \TemplesOfCode\Sofa\Mocker::$exitStatus  = 1;
+            \TemplesOfCode\Sofa\Mocker::$output = array(
+                'Coerced platform error'
+            );
+            $location->buildRoster();
+        }
+
+
+        /**
+         *
+         */
+        public function testBuildRoster()
+        {
+            $location = new LocalLocation('/dir1/dir2/dir3');
+            \TemplesOfCode\CodeSanity\Location\Mocker::$isReadableReturnValue = true;
+            \TemplesOfCode\Sofa\Mocker::$exitStatus  = 0;
+            \TemplesOfCode\Sofa\Mocker::$output = array();
+
+            for ($i = 0; $i < 5; $i++) {
+                $mockFile = (string)(str_repeat((string)$i, 5));
+
+                \TemplesOfCode\Sofa\Mocker::$output[] = sprintf(
+                    '%s %s',
+                    sha1($mockFile),
+                    $mockFile
+                );
+
+            }
+
+            /**
+             * @var Roster $roster
+             */
+            $roster = $location->buildRoster();
+
+            /**
+             * @var ArrayCollection $rosterItems
+             */
+            $rosterItems = $roster->getRosterItems();
+            $i = 0;
+            foreach ($rosterItems as $rosterItem) {
+                /**
+                 * @var RosterItem $rosterItem
+                 */
+
+                $mockFile = (string)(str_repeat((string)$i, 5));
+                $i++;
+                $this->assertEquals($mockFile, $rosterItem->getRelativeFileName());
+                $this->assertEquals(sha1($mockFile), $rosterItem->getHash());
+            }
+
+        }
+
+
 
     }
 }

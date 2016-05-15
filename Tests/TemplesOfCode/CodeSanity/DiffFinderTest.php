@@ -124,7 +124,7 @@ class MockLocation2 extends Location
      */
     public function buildRoster()
     {
-        if ($this->roster->getRoster()->count()) {
+        if ($this->roster->getRosterItems()->count()) {
             return $this->roster;
         }
 
@@ -139,7 +139,7 @@ class MockLocation2 extends Location
             $rosterItems->set($mockFile, $item);
         }
 
-        $this->roster->setRoster($rosterItems);
+        $this->roster->setRosterItems($rosterItems);
         $this->roster->setLocation($this);
         return $this->roster;
     }
@@ -344,13 +344,13 @@ class DiffFinderTest extends \PHPUnit_Framework_TestCase
          */
         $item = $targetLocation2
             ->getRoster()
-            ->getRoster()
+            ->getRosterItems()
             ->get('33333');
         $item->setHash('1a2b3c4d');
 
         $targetLocation2
             ->getRoster()
-            ->getRoster()
+            ->getRosterItems()
             ->set('33333', $item)
         ;
 
@@ -402,7 +402,7 @@ class DiffFinderTest extends \PHPUnit_Framework_TestCase
 
         $targetLocation2
             ->getRoster()
-            ->getRoster()
+            ->getRosterItems()
             ->remove('33333');
 
         $this->assertNotEquals($sotLocation->getDirectory(), $targetLocation1->getDirectory());
@@ -424,7 +424,7 @@ class DiffFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('TemplesOfCode\CodeSanity\DiffItem', $diffItem);
 
         $this->assertEquals(
-            $sotLocation->getRoster()->getRoster()->get('33333')->getHash(),
+            $sotLocation->getRoster()->getRosterItems()->get('33333')->getHash(),
             $diffItem->getSotRosterItem()->getHash()
         );
         $this->assertNull($diffItem->getTargetRosterItem());
@@ -460,7 +460,7 @@ class DiffFinderTest extends \PHPUnit_Framework_TestCase
 
         $sotLocation
             ->getRoster()
-            ->getRoster()
+            ->getRosterItems()
             ->remove('33333');
 
         $this->assertNotEquals($sotLocation->getDirectory(), $targetLocation1->getDirectory());

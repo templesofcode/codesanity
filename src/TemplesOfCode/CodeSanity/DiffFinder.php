@@ -204,7 +204,7 @@ class DiffFinder
 
         $processedItems = new ArrayCollection();
 
-        foreach ($sotRoster->getRoster()->toArray() as  $fileName => $rosterItem) {
+        foreach ($sotRoster->getRosterItems()->toArray() as  $fileName => $rosterItem) {
 
             $fileName = (string)$fileName;
 
@@ -212,7 +212,7 @@ class DiffFinder
              * @var RosterItem $rosterItem
              */
 
-            if (!$targetRoster->getRoster()->containsKey($fileName)) {
+            if (!$targetRoster->getRosterItems()->containsKey($fileName)) {
                 /**
                  * Target roster missing the source of truth roster item.
                  */
@@ -225,7 +225,7 @@ class DiffFinder
             /**
              * @var RosterItem $targetItem
              */
-            $targetItem = $targetRoster->getRoster()->get($fileName);
+            $targetItem = $targetRoster->getRosterItems()->get($fileName);
 
             $targetFilename = $targetItem->getRelativeFileName();
 
@@ -247,7 +247,7 @@ class DiffFinder
         /**
          * Find the items missing from source of truth.
          */
-        foreach ($targetRoster->getRoster()->toArray() as $fileName => $rosterItem) {
+        foreach ($targetRoster->getRosterItems()->toArray() as $fileName => $rosterItem) {
 
             $fileName = (string)$fileName;
             if ($processedItems->contains($fileName)) {

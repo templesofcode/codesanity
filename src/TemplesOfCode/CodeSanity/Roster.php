@@ -8,9 +8,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Roster
 {
     /**
-     * @var ArrayCollection<DiffItem>
+     * @var ArrayCollection<RosterItem>
      */
-    protected $roster;
+    protected $rosterItems;
 
     /**
      * @var Location
@@ -20,24 +20,24 @@ class Roster
 
     public function __construct()
     {
-        $this->roster = new ArrayCollection();
+        $this->rosterItems = new ArrayCollection();
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getRoster()
+    public function getRosterItems()
     {
-        return $this->roster;
+        return $this->rosterItems;
     }
 
     /**
-     * @param ArrayCollection $roster
+     * @param ArrayCollection $rosterItems
      * @return Roster
      */
-    public function setRoster($roster)
+    public function setRosterItems($rosterItems)
     {
-        $this->roster = $roster;
+        $this->rosterItems = $rosterItems;
         return $this;
     }
 
