@@ -15,6 +15,7 @@ use TemplesOfCode\Sofa\Command\SortCommand;
 use TemplesOfCode\Sofa\Command\CdCommand;
 use TemplesOfCode\Sofa\Command\Sha1SumCommand;
 use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Class RemoteLocation
  * @package TemplesOfCode\CodeSanity\Location
@@ -24,7 +25,7 @@ class RemoteLocation extends Location
     /**
      * @var RemoteConnection
      */
-    protected $remoteConnection;
+    protected $remoteConnection = null;
 
     /**
      * @return RemoteConnection
@@ -49,13 +50,24 @@ class RemoteLocation extends Location
      */
     public function isValid()
     {
+        /**
+         * @var RemoteConnection|null $remoteConnection
+         */
+        $remoteConnection = $this->getRemoteConnection();
+        if (empty($remoteConnection)) {
+            return false;
+        }
+
+        /**
+         * @var bool $validRemoteConnection
+         */
         $validRemoteConnection = $this
             ->remoteConnection
             ->isValid()
         ;
         
         if (!$validRemoteConnection) {
-            return null;
+            return false;
         }
         /**
          * @var bool $validRemoteLocation
@@ -74,14 +86,20 @@ class RemoteLocation extends Location
     public function isValidRemoteDirectory()
     {
         /**
+         * @var RemoteConnection|null $remoteConnection
+         */
+        $remoteConnection = $this->getRemoteConnection();
+        if (empty($remoteConnection)) {
+            return false;
+        }
+
+        /**
          * @var ShellCommand $sshCommand
          */
-        $sshCommand = $this
-            ->remoteConnection
-            ->getCommand(true);
+        $sshCommand = $remoteConnection->getCommand(true);
 
         $sshCommand->addParameter(sprintf(
-            '"test -w %s"'.
+            '"test -w %s"',
             $this->directory
         ));
 
@@ -152,7 +170,7 @@ class RemoteLocation extends Location
             $rosterItems->set($hashAndFile[1], $item);
         }
 
-        $this->roster->setRoster($rosterItems);
+        $this->roster->setRosterItems($rosterItems);
         $this->roster->setLocation($this);
 
         return $this->roster;

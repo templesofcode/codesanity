@@ -7,6 +7,9 @@ use TemplesOfCode\Sofa\Exception\ShellExecutionException;
 
 abstract class Location
 {
+    /**
+     * @var string
+     */
     protected $tempStorage = '/tmp';
 
     /**

@@ -19,6 +19,11 @@ namespace TemplesOfCode\Sofa {
      */
     function exec($command, &$output, &$returnVal)
     {
+        if ($command) {
+            /**
+             * todo: do something with this later.
+             */
+        }
         $returnVal = Mocker::$exitStatus;
         $output = Mocker::$output;
     }
@@ -84,7 +89,6 @@ namespace TemplesOfCode\CodeSanity\Location {
 
 namespace TemplesOfCode\CodeSanity\Test {
 
-    use AFM\Rsync\Command;
     use Doctrine\Common\Collections\ArrayCollection;
     use TemplesOfCode\CodeSanity\Location\LocalLocation;
     use TemplesOfCode\CodeSanity\Roster;
