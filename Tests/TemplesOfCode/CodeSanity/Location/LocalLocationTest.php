@@ -39,6 +39,9 @@ namespace TemplesOfCode\Sofa\Command {
     class Mocker
     {
         public static $exitStatus = 0;
+        public static $cmdExitStatus = 0;
+        public static $output = array();
+
     }
 
     /**
@@ -51,9 +54,13 @@ namespace TemplesOfCode\Sofa\Command {
         $parsedCommand = explode(' ', $command);
         if ($parsedCommand[0] == 'which') {
             $output[0] = $parsedCommand[1];
+            $returnVal = Mocker::$exitStatus;
+        }
+        else {
+            $returnVal = Mocker::$cmdExitStatus;
+            $output = Mocker::$output;
         }
 
-        $returnVal = Mocker::$exitStatus;
     }
 }
 
