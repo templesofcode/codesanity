@@ -24,6 +24,9 @@
     "templesofcode/sofa-php": "dev-master"
 
   },
+  "require-dev": {
+    "phpunit/phpunit": "^5.0||^4.0"
+  },
   "autoload": {
     "psr-4": { "TemplesOfCode\\CodeSanity\\": "src/TemplesOfCode/CodeSanity" }
   },
