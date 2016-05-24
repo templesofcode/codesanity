@@ -166,6 +166,21 @@ class MockRemoteConnection6 extends RemoteConnection
 }
 
 /**
+ * Class MockRemoteConnection7
+ * @package TemplesOfCode\CodeSanity\Test
+ */
+class MockRemoteConnection7 extends RemoteConnection
+{
+    /**
+     * @return ShellCommand
+     */
+    public function buildSshCommandAccessor()
+    {
+        return $this->buildSshCommand();
+    }
+}
+
+/**
  * Class RemoteConnectionTest
  * @package TemplesOfCode\CodeSanity\Test
  */
@@ -177,6 +192,10 @@ class RemoteConnectionTest extends \PHPUnit_Framework_TestCase
     private static $fqcn =<<<FQCN
 TemplesOfCode\Sofa\Command\ShellCommand
 FQCN;
+
+    private static $sshTestCommand=<<<CMD
+ssh -q remoteUser@remoteHost exit
+CMD;
 
     /**
      * @var array
@@ -331,5 +350,16 @@ FQCN;
         $remoteConnection = new MockRemoteConnection6(static::$defaultOptions);
         $verdict = $remoteConnection->testConnection();
         $this->assertTrue($verdict);
+    }
+
+
+    public function testBuildSshCommand()
+    {
+        $remoteConnection = new MockRemoteConnection7(static::$defaultOptions);
+        /**
+         * @var ShellCommand $sshCommand;
+         */
+        $sshCommand = $remoteConnection->buildSshCommandAccessor();
+        $this->assertEquals(self::$sshTestCommand, $sshCommand->getCommand());
     }
 }

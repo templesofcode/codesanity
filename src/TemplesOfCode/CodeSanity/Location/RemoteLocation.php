@@ -95,6 +95,31 @@ class RemoteLocation extends Location
         }
 
         /**
+         * @var CommandChain $commandChain
+         */
+        $commandChain = $this->buildTestCommandChain($remoteConnection);
+
+        /**
+         * @var int $exitStatus
+         */
+        list(
+            $exitStatus
+        ) = $commandChain->execute(false);
+
+        if ($exitStatus) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param RemoteConnection $remoteConnection
+     * @return CommandChain
+     */
+    protected function buildTestCommandChain(RemoteConnection $remoteConnection)
+    {
+        /**
          * @var ShellCommand $sshCommand
          */
         $sshCommand = $remoteConnection->getCommand(true);
@@ -109,15 +134,7 @@ class RemoteLocation extends Location
             ->addCommand($sshCommand)
         ;
 
-        list(
-            $exitStatus
-        ) = $sequencedCommandChain->execute(false);
-
-        if ($exitStatus) {
-            return false;
-        }
-
-        return true;
+        return $sequencedCommandChain;
     }
 
     /**
@@ -133,25 +150,24 @@ class RemoteLocation extends Location
         }
 
         /**
-         * @var CommandChain $commandChain
+         * @var RemoteConnection $remoteConnection
          */
-        $commandChain = $this->buildRemoteCommandChain();
+        $remoteConnection = $this->getRemoteConnection();
 
-        $sshCommand = $this->remoteConnection->getCommand(true);
-        $sshCommand->addParameter(sprintf(
-            '"%s"',
-            $commandChain->getCommand()
-        ));
+        /**
+         * @var CommandChain $sshCommandChain
+         */
+        $sshCommandChain = $this->buildSshCommandChain($remoteConnection);
 
         list(
             $status,
             $output
-        ) = $sshCommand->execute(true);
+        ) = $sshCommandChain->execute(true);
 
         if ($status) {
             $shellException = new ShellExecutionException(sprintf(
                 "Failed to execute the remote shell script successfully:\n\t%s",
-                $sshCommand->getCommand()
+                $sshCommandChain->getCommand()
             ));
 
             $shellException->setOutput($output);
@@ -181,6 +197,32 @@ class RemoteLocation extends Location
         return $this->roster;
     }
 
+    /**
+     * Auxiliary function.
+     *
+     * @param RemoteConnection $remoteConnection
+     * @return ShellCommand
+     */
+    protected function buildSshCommandChain(RemoteConnection $remoteConnection)
+    {
+        /**
+         * @var CommandChain $commandChain
+         */
+        $commandChain = $this->buildRemoteCommandChain();
+
+        $sshCommand = $remoteConnection->getCommand(true);
+        $sshCommand->addParameter(sprintf(
+            '"%s"',
+            $commandChain->getCommand()
+        ));
+
+        return $sshCommand;
+    }
+
+    /**
+     * Auxiliary function.
+     * @return CommandChain
+     */
     protected function buildRemoteCommandChain()
     {
         /**
@@ -196,6 +238,7 @@ class RemoteLocation extends Location
 
         return $sequenceChainedCommands;
     }
+
     /**
      * @return CommandChain
      */
@@ -226,7 +269,8 @@ class RemoteLocation extends Location
         $pipeChainedCommands->addCommand($sha1sumCommand);
 
         $xargsCommand = new XargsCommand();
-        $xargsCommand->addArgument('n', 1);
+//        $xargsCommand->addArgument('n', 1);
+        $xargsCommand->addParameter('-n1');
         $xargsCommand->addParameter($sha1sumCommand->getCommand());
         //$xargsCommand->addParameter('>> '.$this->hashesRosterFileName);
         $pipeChainedCommands->addCommand($xargsCommand);

@@ -6,6 +6,8 @@ use TemplesOfCode\CodeSanity\RemoteConnection;
 use TemplesOfCode\CodeSanity\Roster;
 use TemplesOfCode\CodeSanity\RosterItem;
 
+include_once(__DIR__.'/../MockSpace.php');
+
 /**
  * Class MockRemoteConnection
  * @package TemplesOfCode\Sofa
@@ -49,6 +51,19 @@ class MockRemoteLocation extends RemoteLocation
     {
         return $this->buildSequenceChainedCommands();
     }
+
+    /**
+     * @return \TemplesOfCode\Sofa\CommandChain
+     */
+    public function testBuildCommandChainAccessor()
+    {
+        return $this->buildTestCommandChain($this->getRemoteConnection());
+    }
+
+    public function buildSshCommandChainAccessor()
+    {
+        return parent::buildSshCommandChain($this->getRemoteConnection());
+    }
 }
 
 /**
@@ -82,9 +97,26 @@ class RemoteLocationTest extends \PHPUnit_Framework_TestCase
 cd /dir1/dir2/dir3
 CHAIN;
 
+    /**
+     * @var string
+     */
     private static $remoteName=<<<NAME
 mockUser@mockHost:/dir1/dir2/dir3
 NAME;
+
+    /**
+     * @var string
+     */
+    private static $testCommand=<<<CMD
+ssh mockUser@mockHost "test -w /dir1/dir2/dir3"
+CMD;
+
+    /**
+     * @var string
+     */
+    private static $sshCommand=<<<CMD
+ssh mockUser@mockHost "cd /dir1/dir2/dir3;find . ! -type d ! -type l -print | sed -e '"s/[[:alnum:]]/\\\\\\\\\\\\&/g"' | sort | sha1sum | xargs -n1 sha1sum"
+CMD;
 
 
     /**
@@ -172,6 +204,33 @@ NAME;
         MockRemoteLocation::$validRemoteDirectoryReturnValue = false;
         $verdict = $remoteLocation->isValid();
         $this->assertFalse($verdict);
+    }
+
+    /**
+     *
+     */
+    public function testBuildTestChainCommand()
+    {
+        $options = array(
+            'executable' => 'ssh',
+            'host' => 'mockHost',
+            'port' => 22,
+            'username' => 'mockUser',
+//            'public_key' => '~/.ssh/id_dsa.pub'
+        );
+
+        $remoteConnection = new MockRemoteConnection($options);
+        $remoteDirectory = '/dir1/dir2/dir3';
+        $remoteLocation = new MockRemoteLocation($remoteDirectory);
+        $remoteLocation->setRemoteConnection($remoteConnection);
+
+        /**
+         * @var \TemplesOfCode\Sofa\CommandChain $commandChain
+         */
+        $commandChain = $remoteLocation->testBuildCommandChainAccessor();
+
+        $this->assertEquals(self::$testCommand, $commandChain->getCommand());
+
     }
 
     /**
@@ -314,6 +373,7 @@ NAME;
         $remoteLocation->buildRoster();
     }
 
+
     /**
      * @expectedException \TemplesOfCode\Sofa\Exception\ShellExecutionException
      */
@@ -340,6 +400,28 @@ NAME;
          */
         $remoteLocation->buildRoster();
    }
+
+
+    public function testBuildSshCommandChain()
+    {
+        $remoteDirectory = '/dir1/dir2/dir3';
+        $options = array(
+            'executable' => 'ssh',
+            'host' => 'mockHost',
+            'port' => 22,
+            'username' => 'mockUser',
+//            'public_key' => '~/.ssh/id_dsa.pub'
+        );
+
+        $remoteConnection = new RemoteConnection($options);
+        $remoteLocation = new MockRemoteLocation($remoteDirectory);
+        $remoteLocation->setRemoteConnection($remoteConnection);
+
+        $commandChain = $remoteLocation->buildSshCommandChainAccessor();
+
+        $this->assertEquals(self::$sshCommand, $commandChain->getCommand());
+    }
+
     /**
      *
      */

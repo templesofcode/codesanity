@@ -1,6 +1,5 @@
 <?php
 
-
 namespace TemplesOfCode\CodeSanity;
 
 /**
@@ -41,7 +40,6 @@ class RosterItem
         $this->roster = $roster;
         return $this;
     }
-
 
     /**
      * @return string

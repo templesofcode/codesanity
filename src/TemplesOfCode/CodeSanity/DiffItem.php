@@ -53,5 +53,4 @@ class DiffItem
         $this->targetRosterItem = $targetRosterItem;
         return $this;
     }
-
 }

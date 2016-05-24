@@ -20,7 +20,6 @@ class DiffFinder
      */
     protected $targetLocations;
 
-
     /**
      * DiffFinder constructor.
      */
@@ -227,6 +226,9 @@ class DiffFinder
              */
             $targetItem = $targetRoster->getRosterItems()->get($fileName);
 
+            /**
+             * @var string $targetFilename
+             */
             $targetFilename = $targetItem->getRelativeFileName();
 
             $processedItems->add($targetFilename);

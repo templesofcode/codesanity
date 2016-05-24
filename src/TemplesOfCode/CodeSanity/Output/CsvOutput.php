@@ -63,6 +63,9 @@ class CsvOutput extends Output
         }
     }
 
+    /**
+     * @param DiffItem $diffItem
+     */
     private function writeDiffItem(DiffItem $diffItem)
     {
         /**

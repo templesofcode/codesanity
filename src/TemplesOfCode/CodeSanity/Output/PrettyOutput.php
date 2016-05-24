@@ -28,13 +28,11 @@ class PrettyOutput extends Output
      * @var int
      */
     protected  $hashSpaceLength = 40;
-
-
+    
     /**
      * @var string
      */
     protected $border;
-
 
     /**
      * {@inheritdoc}
@@ -139,7 +137,6 @@ class PrettyOutput extends Output
      */
     public function write()
     {
-
         if ($this->headerEnabled) {
             $this->writeHeader();
         }
@@ -156,6 +153,9 @@ class PrettyOutput extends Output
         $this->output->writeln($this->border);
     }
 
+    /**
+     * @param ArrayCollection $differenceSet
+     */
     private function writeDifferenceSet(ArrayCollection $differenceSet)
     {
         foreach ($differenceSet as $diffItem) {
@@ -163,7 +163,6 @@ class PrettyOutput extends Output
              * @var DiffItem $diffItem
              */
             $this->writeDiffItem($diffItem);
-
         }
     }
 
@@ -172,8 +171,6 @@ class PrettyOutput extends Output
      */
     private function writeDiffItem(DiffItem $diffItem)
     {
-
-
         $sot = $sotHash = 'Missing';
 
         /**
@@ -190,7 +187,6 @@ class PrettyOutput extends Output
 
             $sotHash = $sotRosterItem->getHash();
         }
-
 
         $target = $targetHash = 'Missing';
 
@@ -233,5 +229,4 @@ class PrettyOutput extends Output
             static::$header[3]
         ));
     }
-
 }

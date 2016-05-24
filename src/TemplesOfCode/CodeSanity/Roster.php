@@ -2,9 +2,12 @@
 
 namespace TemplesOfCode\CodeSanity;
 
-
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * Class Roster
+ * @package TemplesOfCode\CodeSanity
+ */
 class Roster
 {
     /**
@@ -58,6 +61,4 @@ class Roster
         $this->location = $location;
         return $this;
     }
-
-
 }

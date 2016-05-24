@@ -21,7 +21,6 @@ use TemplesOfCode\CodeSanity\Roster;
  */
 class LocalLocation extends Location
 {
-
     /*
      * @param string $directory
      * @return bool

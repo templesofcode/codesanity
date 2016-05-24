@@ -63,7 +63,6 @@ class RemoteConnection extends SSH
         return true;
     }
 
-
     /**
      * @var bool
      * @return bool
@@ -73,9 +72,7 @@ class RemoteConnection extends SSH
         /**
          * @var ShellCommand $sshCommand
          */
-        $sshCommand = $this->getCommand(true);
-        $sshCommand->addOption('q');
-        $sshCommand->addParameter('exit');
+        $sshCommand = $this->buildSshCommand();
 
         list(
             $exitStatus
@@ -86,5 +83,20 @@ class RemoteConnection extends SSH
         }
 
         return true;
+    }
+
+    /**
+     * @return ShellCommand
+     */
+    protected function buildSshCommand()
+    {
+        /**
+         * @var ShellCommand $sshCommand
+         */
+        $sshCommand = $this->getCommand(true);
+        $sshCommand->addOption('q');
+        $sshCommand->addParameter('exit');
+
+        return $sshCommand;
     }
 }

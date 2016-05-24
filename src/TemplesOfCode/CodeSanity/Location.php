@@ -5,6 +5,10 @@ namespace TemplesOfCode\CodeSanity;
 use Doctrine\Common\Collections\ArrayCollection;
 use TemplesOfCode\Sofa\Exception\ShellExecutionException;
 
+/**
+ * Class Location
+ * @package TemplesOfCode\CodeSanity
+ */
 abstract class Location
 {
     /**
@@ -111,5 +115,4 @@ abstract class Location
      * @return string
      */
     abstract public function getName();
-
 }
