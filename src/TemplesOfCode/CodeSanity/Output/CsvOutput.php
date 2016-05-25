@@ -78,7 +78,7 @@ class CsvOutput extends Output
              */
             $sotName = $sotRosterItem->getRoster()->getLocation()->getName();
             $sotFileName = $sotRosterItem->getRelativeFileName();
-            $sotItem = $sotName .'/'.$sotFileName;
+            $sotItem = realpath($sotName .'/'.$sotFileName);
             $sotHash = $sotRosterItem->getHash();
         }
         else {
@@ -97,7 +97,7 @@ class CsvOutput extends Output
             $targetName = $targetRosterItem->getRoster()->getLocation()->getName();
             $targetFileName = $targetRosterItem->getRelativeFileName();
 
-            $targetItem = $targetName .'/'. $targetFileName;
+            $targetItem =realpath($targetName .'/'. $targetFileName);
             $targetHash = $targetRosterItem->getHash();
         }
         else {

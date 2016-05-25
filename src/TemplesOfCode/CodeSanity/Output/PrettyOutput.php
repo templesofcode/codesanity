@@ -183,7 +183,7 @@ class PrettyOutput extends Output
              */
             $sotName = $sotRosterItem->getRoster()->getLocation()->getName();
             $sotFileName = $sotRosterItem->getRelativeFileName();
-            $sot = $sotName . '/' . $sotFileName;
+            $sot = realpath($sotName . '/' . $sotFileName);
 
             $sotHash = $sotRosterItem->getHash();
         }
@@ -200,7 +200,8 @@ class PrettyOutput extends Output
              */
             $targetName = $targetRosterItem->getRoster()->getLocation()->getName();
             $targetFileName = $targetRosterItem->getRelativeFileName();
-            $target = $targetName . '/' . $targetFileName;
+            $target = realpath($targetName . '/' . $targetFileName);
+
             $targetHash = $targetRosterItem->getHash();
         }
 

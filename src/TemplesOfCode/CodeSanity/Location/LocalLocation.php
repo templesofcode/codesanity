@@ -130,17 +130,18 @@ class LocalLocation extends Location
         $pipeChainedCommands->addCommand($findCommand);
 
         $sedCommand = new SedCommand();
-        $sedCommand->addArgument('e', '"s/[[:alnum:]]/\\\\\\&/g"');
+        $sedCommand->addArgument('e', 's/[^[:alnum:]]/\\\\&/g');
         $pipeChainedCommands->addCommand($sedCommand);
 
         $sortCommand = new SortCommand();
         $pipeChainedCommands->addCommand($sortCommand);
 
         $sha1sumCommand = new Sha1SumCommand();
-        $pipeChainedCommands->addCommand($sha1sumCommand);
+//        $pipeChainedCommands->addCommand($sha1sumCommand);
 
         $xargsCommand = new XargsCommand();
-        $xargsCommand->addArgument('n', 1);
+        //$xargsCommand->addArgument('n', 1);
+        $xargsCommand->addParameter('-n1');
         $xargsCommand->addParameter($sha1sumCommand->getCommand());
         //$xargsCommand->addParameter('>> '.$this->hashesRosterFileName);
         $pipeChainedCommands->addCommand($xargsCommand);
