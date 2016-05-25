@@ -92,3 +92,10 @@ namespace TemplesOfCode\CodeSanity\Location {
         return Mocker::$isReadableReturnValue;
     }
 }
+
+namespace TemplesOfCode\CodeSanity\Output {
+    function realpath($path)
+    {
+        return $path;
+    }
+}

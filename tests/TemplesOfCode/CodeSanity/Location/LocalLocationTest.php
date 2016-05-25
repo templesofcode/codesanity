@@ -39,7 +39,7 @@ class LocalLocationTest extends \PHPUnit_Framework_TestCase
 {
 
     private static $expectedCommandChain=<<<CHAIN
-find . ! -type d ! -type l -print | sed -e '"s/[[:alnum:]]/\\\\\\&/g"' | sort | sha1sum | xargs -n '1' sha1sum
+find . ! -type d ! -type l -print | sed -e 's/[^[:alnum:]]/\\\\&/g' | sort | xargs -n1 sha1sum
 CHAIN;
 
 
