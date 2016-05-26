@@ -130,7 +130,7 @@ abstract class Location
         /**
          * @var CommandChain $rosterListCommand
          */
-        $rosterListCommand =$this->getRosterListCommand();
+        $rosterListCommand = $this->getRosterListCommand();
 
         list(
             $status,

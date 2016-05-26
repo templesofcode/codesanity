@@ -27,22 +27,27 @@ class RemoteConnection extends SSH
      */
     public function getCommand($hostConnection = true)
     {
-        if(is_null($this->username))
+        if (is_null($this->username)) {
             throw new \InvalidArgumentException("You must specify a SSH username");
+        }
 
-        if(is_null($this->host))
+        if (is_null($this->host)) {
             throw new \InvalidArgumentException("You must specify a SSH host to connect");
+        }
 
         $command = new ShellCommand($this->executable);
 
-        if($this->port != 22)
+        if ($this->port != 22) {
             $command->addArgument("p", $this->port);
+        }
 
-        if(!is_null($this->publicKey))
+        if (!is_null($this->publicKey)) {
             $command->addArgument("i", $this->publicKey);
+        }
 
-        if($hostConnection)
+        if ($hostConnection) {
             $command->addParameter($this->getHostConnection());
+        }
 
         return $command;
     }
