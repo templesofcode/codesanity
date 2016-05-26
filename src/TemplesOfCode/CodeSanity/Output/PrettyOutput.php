@@ -5,7 +5,6 @@ namespace TemplesOfCode\CodeSanity\Output;
 use Doctrine\Common\Collections\ArrayCollection;
 use TemplesOfCode\CodeSanity\DiffItem;
 use TemplesOfCode\CodeSanity\Output;
-use TemplesOfCode\CodeSanity\RosterItem;
 
 class PrettyOutput extends Output
 {
