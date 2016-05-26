@@ -16,7 +16,7 @@ class DiffFinder
     protected $sourceOfTruth;
 
     /**
-     * @var ArrayCollection<Location>
+     * @var ArrayCollection
      */
     protected $targetLocations;
 
@@ -29,7 +29,7 @@ class DiffFinder
     }
 
     /**
-     * @return ArrayCollection<Location>
+     * @return ArrayCollection
      */
     public function getTargetLocations()
     {

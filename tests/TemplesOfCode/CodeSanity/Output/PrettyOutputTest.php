@@ -11,12 +11,12 @@ use TemplesOfCode\CodeSanity\Roster;
 use TemplesOfCode\CodeSanity\RosterItem;
 use Symfony\Component\Console\Output\BufferedOutput;
 use TemplesOfCode\CodeSanity\Location;
-
+use TemplesOfCode\CodeSanity\Location\LocalLocation;
 /**
  * Class PrettyOutputTestMockLocation
  * @package TemplesOfCode\CodeSanity\Test
  */
-class PrettyOutputTestMockLocation extends Location
+class PrettyOutputTestMockLocation extends LocalLocation
 {
     /**
      * {@inheritdoc}

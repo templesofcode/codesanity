@@ -12,6 +12,7 @@ use TemplesOfCode\CodeSanity\RosterItem;
 use TemplesOfCode\CodeSanity\Location;
 use TemplesOfCode\CodeSanity\Roster;
 use TemplesOfCode\CodeSanity\DiffFinder;
+use TemplesOfCode\CodeSanity\Location\LocalLocation;
 
 /**
  * Class CsvOutputTestFinder
@@ -31,7 +32,7 @@ class CsvOutputTestFinder extends DiffFinder
 /**
  * Class CsvOutputTestMockLocation
  */
-class CsvOutputTestMockLocation extends Location
+class CsvOutputTestMockLocation extends LocalLocation
 {
     /**
      * {@inheritdoc}

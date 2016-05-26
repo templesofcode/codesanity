@@ -6,12 +6,13 @@ namespace TemplesOfCode\CodeSanity\Test;
 use Doctrine\Common\Collections\ArrayCollection;
 use TemplesOfCode\CodeSanity\Location;
 use TemplesOfCode\CodeSanity\Roster;
+use TemplesOfCode\CodeSanity\Location\LocalLocation;
 
 /**
  * Class MockLocation
  * @package TemplesOfCode\CodeSanity\Test
  */
-class MockLocation extends Location
+class MockLocation extends LocalLocation
 {
     /**
      * @return string

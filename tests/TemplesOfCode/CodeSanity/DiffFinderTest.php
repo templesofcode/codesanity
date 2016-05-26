@@ -2,19 +2,19 @@
 
 namespace TemplesOfCode\CodeSanity\Test;
 
-//use SebastianBergmann\Diff\Diff;
 use TemplesOfCode\CodeSanity\DiffFinder;
 use TemplesOfCode\CodeSanity\DiffItem;
 use TemplesOfCode\CodeSanity\Location;
 use Doctrine\Common\Collections\ArrayCollection;
 use TemplesOfCode\CodeSanity\Roster;
 use TemplesOfCode\CodeSanity\RosterItem;
+use TemplesOfCode\CodeSanity\Location\LocalLocation;
 
 /**
  * Class MockLocationForDiffFinderTest
  * @package TemplesOfCode\CodeSanity\Test
  */
-class MockLocationForDiffFinderTest extends Location
+class MockLocationForDiffFinderTest extends LocalLocation
 {
     /**
      * @return string
@@ -44,7 +44,7 @@ class MockLocationForDiffFinderTest extends Location
  * Class MockLocationForDiffFinderTest2
  * @package TemplesOfCode\CodeSanity\Test
  */
-class MockLocationForDiffFinderTest2 extends Location
+class MockLocationForDiffFinderTest2 extends LocalLocation
 {
     /**
      * @return string
@@ -109,7 +109,7 @@ class MockFinder3 extends DiffFinder
     }
 }
 
-class MockLocation2 extends Location
+class MockLocation2 extends LocalLocation
 {
     /**
      * {@inheritdoc}
