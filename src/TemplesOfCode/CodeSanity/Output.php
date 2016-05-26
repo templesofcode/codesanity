@@ -22,6 +22,11 @@ abstract class Output
     ];
 
     /**
+     * @var string
+     */
+    protected $mask = '';
+
+    /**
      * @var bool
      */
     protected $headerEnabled;
@@ -65,6 +70,63 @@ abstract class Output
     {
         $this->headerEnabled = $headerEnabled;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMask()
+    {
+        return $this->mask;
+    }
+
+    /**
+     * @param DiffItem $diffItem
+     */
+    protected function writeDiffItem(DiffItem $diffItem)
+    {
+        $sot = $sotHash = 'Missing';
+
+        /**
+         * @var RosterItem $sotRosterItem
+         */
+        $sotRosterItem = $diffItem->getSotRosterItem();
+        if (!empty($sotRosterItem)) {
+            /**
+             * @var string $sotName
+             */
+            $sotName = $sotRosterItem->getRoster()->getLocation()->getName();
+            $sotFileName = $sotRosterItem->getRelativeFileName();
+            $sot = realpath($sotName . '/' . $sotFileName);
+            $sotHash = $sotRosterItem->getHash();
+        }
+
+        $target = $targetHash = 'Missing';
+
+        /**
+         * @var RosterItem $targetRosterItem
+         */
+        $targetRosterItem = $diffItem->getTargetRosterItem();
+        if (!empty($targetRosterItem)) {
+            /**
+             * @var string $targetName
+             */
+            $targetName = $targetRosterItem->getRoster()->getLocation()->getName();
+            $targetFileName = $targetRosterItem->getRelativeFileName();
+            $target = realpath($targetName . '/' . $targetFileName);
+
+            $targetHash = $targetRosterItem->getHash();
+        }
+
+        $line = sprintf(
+            $this->getMask(),
+            $sot,
+            $sotHash,
+            $target,
+            $targetHash
+        );
+
+        $this->output->writeln($line);
     }
 
     /**

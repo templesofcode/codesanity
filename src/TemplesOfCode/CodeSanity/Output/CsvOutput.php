@@ -15,6 +15,8 @@ use TemplesOfCode\CodeSanity\RosterItem;
 class CsvOutput extends Output
 {
 
+    protected $mask = '%s,%s,%s,%s';
+
     /**
      * {@inheritdoc}
      */
@@ -34,7 +36,7 @@ class CsvOutput extends Output
 
         foreach ($this->differences as $differenceSet) {
             /**
-             * @var ArrayCollection<DiffItem> $differenceSet
+             * @var ArrayCollection $differenceSet
              */
 
             $this->writeDifferenceSet($differenceSet);
@@ -61,61 +63,5 @@ class CsvOutput extends Output
 
             $this->writeDiffItem($diffItem);
         }
-    }
-
-    /**
-     * @param DiffItem $diffItem
-     */
-    private function writeDiffItem(DiffItem $diffItem)
-    {
-        /**
-         * @var RosterItem $sotRosterItem
-         */
-        $sotRosterItem = $diffItem->getSotRosterItem();
-        if (!empty($sotRosterItem)) {
-            /**
-             * @var string $sotName
-             */
-            $sotName = $sotRosterItem->getRoster()->getLocation()->getName();
-            $sotFileName = $sotRosterItem->getRelativeFileName();
-            $sotItem = realpath($sotName .'/'.$sotFileName);
-            $sotHash = $sotRosterItem->getHash();
-        }
-        else {
-            $sotItem = 'Missing';
-            $sotHash = 'Missing';
-        }
-
-        /**
-         * @var RosterItem $targetRosterItem
-         */
-        $targetRosterItem = $diffItem->getTargetRosterItem();
-        if (!empty($targetRosterItem)) {
-            /**
-             * @var string $targetName
-             */
-            $targetName = $targetRosterItem->getRoster()->getLocation()->getName();
-            $targetFileName = $targetRosterItem->getRelativeFileName();
-
-            $targetItem =realpath($targetName .'/'. $targetFileName);
-            $targetHash = $targetRosterItem->getHash();
-        }
-        else {
-            $targetItem = 'Missing';
-            $targetHash = 'Missing';
-        }
-
-        /**
-         * @var string $line
-         */
-        $line = sprintf(
-            '%s,%s,%s,%s',
-            $sotItem,
-            $sotHash,
-            $targetItem,
-            $targetHash
-        );
-
-        $this->output->writeln($line);
     }
 }

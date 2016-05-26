@@ -93,7 +93,11 @@ namespace TemplesOfCode\CodeSanity\Location {
     }
 }
 
-namespace TemplesOfCode\CodeSanity\Output {
+namespace  TemplesOfCode\CodeSanity {
+    /**
+     * @param string $path
+     * @return string
+     */
     function realpath($path)
     {
         return $path;
