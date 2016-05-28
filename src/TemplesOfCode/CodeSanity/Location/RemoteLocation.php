@@ -166,7 +166,7 @@ class RemoteLocation extends Location
         $commandChain = $this->buildRemoteCommandChain();
 
         $remoteCommand = $commandChain->getCommand();
-        $remoteCommand = str_replace('\\','\\\\' , $remoteCommand);
+        $remoteCommand = str_replace('\\', '\\\\', $remoteCommand);
 
         $sshCommand = $remoteConnection->getCommand(true);
         $sshCommand->addParameter(sprintf(
