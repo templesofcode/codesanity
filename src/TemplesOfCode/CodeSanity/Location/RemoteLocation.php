@@ -115,7 +115,7 @@ class RemoteLocation extends Location
         $sshCommand = $remoteConnection->getCommand(true);
 
         $sshCommand->addParameter(sprintf(
-            '"test -w %s"',
+            '"test -e %s"',
             $this->directory
         ));
 
@@ -165,10 +165,13 @@ class RemoteLocation extends Location
          */
         $commandChain = $this->buildRemoteCommandChain();
 
+        $remoteCommand = $commandChain->getCommand();
+        $remoteCommand = str_replace('\\','\\\\' , $remoteCommand);
+
         $sshCommand = $remoteConnection->getCommand(true);
         $sshCommand->addParameter(sprintf(
             '"%s"',
-            $commandChain->getCommand()
+            $remoteCommand
         ));
 
         return $sshCommand;

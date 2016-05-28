@@ -108,14 +108,14 @@ NAME;
      * @var string
      */
     private static $testCommand=<<<CMD
-ssh mockUser@mockHost "test -w /dir1/dir2/dir3"
+ssh mockUser@mockHost "test -e /dir1/dir2/dir3"
 CMD;
 
     /**
      * @var string
      */
     private static $sshCommand=<<<CMD
-ssh mockUser@mockHost "cd /dir1/dir2/dir3;find . ! -type d ! -type l -print | sed -e 's/[^[:alnum:]]/\\\\&/g' | sort | xargs -n1 sha1sum"
+ssh mockUser@mockHost "cd /dir1/dir2/dir3;find . ! -type d ! -type l -print | sed -e 's/[^[:alnum:]]/\\\\\\\\&/g' | sort | xargs -n1 sha1sum"
 CMD;
 
 
